@@ -12,8 +12,8 @@ import dviglo.log; // dvLog
 import dviglo.std_vector_utils; // contains()
 
 // Стандартная библиотека
-import <format>;
 import <unordered_map>;
+import <format>;
 
 using namespace rapidjson;
 using namespace std;
@@ -141,7 +141,7 @@ public:
         if (!parse_result)
         {
             LOG().write_error(
-                format("dvLocalization::load_json_file(): !parse_result | path = \"{}\" | offset = {} | {}",
+                format("dvLocalization::load_json_file(): !parse_result | path = {} | offset = {} | {}",
                     path, parse_result.Offset(), GetParseError_En(parse_result.Code()))
             );
 
@@ -150,7 +150,7 @@ public:
 
         if (!document.IsObject())
         {
-            LOG().write_error(format("dvLocalization::load_json_file(): !parse_result | path = \"{}\"", path));
+            LOG().write_error("dvLocalization::load_json_file(): !parse_result | path = " + path);
             return;
         }
 
@@ -158,7 +158,7 @@ public:
         {
             if (!member.value.IsObject())
             {
-                LOG().write_error(format("dvLocalization::load_json_file(): !member.value.IsObject() | path = \"{}\"", path));
+                LOG().write_error("dvLocalization::load_json_file(): !member.value.IsObject() | path = " + path);
                 return;
             }
 
@@ -168,7 +168,7 @@ public:
             {
                 if (!translation.value.IsString())
                 {
-                    LOG().write_error(format("dvLocalization::load_json_file(): !translation.value.IsString() | path = \"{}\"", path));
+                    LOG().write_error("dvLocalization::load_json_file(): !translation.value.IsString() | path = " + path);
                     return;
                 }
 

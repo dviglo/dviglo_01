@@ -6,9 +6,8 @@ import <pugixml.hpp>;
 import dviglo.log; // dvLog
 import dviglo.path; // dv_path
 
-// Ошибка компиляции, если поменять местами эти 2 импорта
+// Стандартная библиотека
 import <unordered_map>;
-import <format>;
 
 using namespace pugi;
 using namespace std;
@@ -66,21 +65,21 @@ public:
         xml_parse_result result = doc.load_file(file_path.c_str());
         if (!result)
         {
-            LOG().write_error(format("Font::Font(\"{}\") | !result", file_path));
+            LOG().write_error("SpriteFont::SpriteFont(file_path): !result | file_path = " + file_path);
             return;
         }
 
         xml_node root_node = doc.first_child();
         if (root_node.name() != string("font"))
         {
-            LOG().write_error(format("Font::Font(\"{}\") | root_node.name() != string(\"font\")", file_path));
+            LOG().write_error("SpriteFont::SpriteFont(file_path): root_node.name() != string(\"font\") | file_path = " + file_path);
             return;
         }
 
         xml_node pages_node = root_node.child("pages");
         if (!pages_node)
         {
-            LOG().write_error(format("Font::Font(\"{}\") | !pages_node", file_path));
+            LOG().write_error("SpriteFont::SpriteFont(file_path): !pages_node | file_path = " + file_path);
             return;
         }
 
@@ -100,7 +99,7 @@ public:
         {
             if (!page_node)
             {
-                LOG().write_error(format("Font::Font(\"{}\") | !page_node", file_path));
+                LOG().write_error("SpriteFont::SpriteFont(file_path): !page_node | file_path = " + file_path);
                 return;
             }
 

@@ -3,9 +3,6 @@ export module dviglo.file;
 // Модули движка
 import dviglo.log;
 
-// Стандартная библиотека
-import <format>;
-
 using namespace std;
 
 // Пространство имён содержит функции для работы с файлами
@@ -37,7 +34,7 @@ string read_all_text(const string& path)
     }
     else
     {
-        LOG().write_error(format("dv_file::read_all_text(): !fp | path = \"{}\"", path));
+        LOG().write_error("dv_file::read_all_text(): !fp | path = " + path);
     }
 
     return ret;

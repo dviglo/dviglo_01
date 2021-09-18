@@ -1,27 +1,26 @@
 export module dviglo.sdl_utils;
 
-// Модули движка
+// РњРѕРґСѓР»Рё РґРІРёР¶РєР°
 import <SDL.h>; // SDL_GetPrefPath(), SDL_GetBasePath()
 import dviglo.log; // dvLog
 import dviglo.path; // dv_path
 
-// Стандартная библиотека
+// РЎС‚Р°РЅРґР°СЂС‚РЅР°СЏ Р±РёР±Р»РёРѕС‚РµРєР°
 import <cassert>; // assert()
 import <cstdlib>; // exit()
-import <format>;
 import <iostream>; // cerr
 
 using namespace std;
 
-// Папка для пользовательских данных. В конце пути нет /.
-// При неудаче завершает приложение
+// РџР°РїРєР° РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёС… РґР°РЅРЅС‹С…. Р’ РєРѕРЅС†Рµ РїСѓС‚Рё РЅРµС‚ /.
+// РџСЂРё РЅРµСѓРґР°С‡Рµ Р·Р°РІРµСЂС€Р°РµС‚ РїСЂРёР»РѕР¶РµРЅРёРµ
 export string dv_pref_path(const string& org_name, const string& app_name)
 {
     char* pref_path = SDL_GetPrefPath(org_name.c_str(), app_name.c_str());
 
     if (!pref_path)
     {
-        // Обычно этот путь используется для лога, так что мы даже в лог ничего вывести не можем
+        // РћР±С‹С‡РЅРѕ СЌС‚РѕС‚ РїСѓС‚СЊ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ Р»РѕРіР°, С‚Р°Рє С‡С‚Рѕ РјС‹ РґР°Р¶Рµ РІ Р»РѕРі РЅРёС‡РµРіРѕ РІС‹РІРµСЃС‚Рё РЅРµ РјРѕР¶РµРј
         cerr << "!pref_path";
         exit(1);
     }
@@ -31,7 +30,7 @@ export string dv_pref_path(const string& org_name, const string& app_name)
         SDL_free(pref_path);
         dv_path::to_internal(ret);
 
-        // Убираем / в конце пути
+        // РЈР±РёСЂР°РµРј / РІ РєРѕРЅС†Рµ РїСѓС‚Рё
         assert(!ret.empty() && ret.back() == '/');
         ret.pop_back();
 
@@ -39,14 +38,14 @@ export string dv_pref_path(const string& org_name, const string& app_name)
     }
 }
 
-// Папка с экзешником. В конце пути нет /
+// РџР°РїРєР° СЃ СЌРєР·РµС€РЅРёРєРѕРј. Р’ РєРѕРЅС†Рµ РїСѓС‚Рё РЅРµС‚ /
 export string dv_base_path()
 {
     char* base_path = SDL_GetBasePath();
 
     if (!base_path)
     {
-        LOG().write_error(format("base_path(): !base_path | {}", SDL_GetError()));
+        LOG().write_error("dv_base_path(): !base_path | "s + SDL_GetError());
         return "./";
     }
     else
@@ -55,7 +54,7 @@ export string dv_base_path()
         SDL_free(base_path);
         dv_path::to_internal(ret);
 
-        // Убираем / в конце пути
+        // РЈР±РёСЂР°РµРј / РІ РєРѕРЅС†Рµ РїСѓС‚Рё
         assert(!ret.empty() && ret.back() == '/');
         ret.pop_back();
 

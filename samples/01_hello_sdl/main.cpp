@@ -9,9 +9,6 @@ import dviglo.log; // LOG()
 import dviglo.scope_guard; // dvScopeGuard
 import dviglo.sdl_utils; // dv_pref_path()
 
-// Стандартная библиотека
-import <format>;
-
 using namespace std;
 
 int SDL_main(int argc, char* argv[])
@@ -27,7 +24,7 @@ int SDL_main(int argc, char* argv[])
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        LOG().write_error(format("SDL_Init(SDL_INIT_VIDEO) < 0 | {}", SDL_GetError()));
+        LOG().write_error("SDL_Init(SDL_INIT_VIDEO) < 0 | "s + SDL_GetError());
 
         // Тут будет автоматически вызвана функция LOG().close();
         return 1;
@@ -44,7 +41,7 @@ int SDL_main(int argc, char* argv[])
 
     if (!window)
     {
-        LOG().write_error(format("!window | {}", SDL_GetError()));
+        LOG().write_error("!window | "s + SDL_GetError());
 
         // Тут будут автоматически вызваны:
         // SDL_Quit();

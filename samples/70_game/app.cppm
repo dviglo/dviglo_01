@@ -15,7 +15,6 @@ import dviglo.sdl_utils; // dv_base_path(), dv_pref_path()
 import dviglo.time; // dvTime
 
 // Стандартная библиотека
-import <format>;
 import <string>;
 import <vector>;
 
@@ -40,7 +39,7 @@ private:
     vector<string> args_;
 
     // Значение, которое вернёт main()
-    int exit_code_ = 0;
+    i32 exit_code_ = 0;
 
     // Был ли запрос на завершение программы
     bool exiting_ = false;
@@ -67,7 +66,7 @@ private:
     {
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
         {
-            LOG().write_error(format("App::begin_run(): SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0 | {}", SDL_GetError()));
+            LOG().write_error("App::begin_run(): SDL_Init(...) < 0 | "s + SDL_GetError());
             exit(1);
             return;
         }
@@ -94,7 +93,7 @@ private:
             config::window_width, config::window_height, flags);
         if (!window_)
         {
-            LOG().write_error(format("App::begin_run(): !window_ | {}", SDL_GetError()));
+            LOG().write_error("App::begin_run(): !window_ | "s + SDL_GetError());
             exit(1);
             return;
         }
@@ -108,7 +107,7 @@ private:
         SDL_GLContext gl_context = SDL_GL_CreateContext(window_);
         if (!gl_context)
         {
-            LOG().write_error(format("App::begin_run(): !gl_context | {}", SDL_GetError()));
+            LOG().write_error("App::begin_run(): !gl_context | "s + SDL_GetError());
             exit(1);
             return;
         }
@@ -122,14 +121,14 @@ private:
         GLenum glew_result = glewInit();
         if (glew_result != GLEW_OK)
         {
-            LOG().write_error(format("glew_result != GLEW_OK | {}", (const char*)glewGetErrorString(glew_result)));
+            LOG().write_error("App::begin_run(): glew_result != GLEW_OK | "s + (const char*)glewGetErrorString(glew_result));
             exit(1);
             return;
         }
 
-        LOG().write_info(format("GL_VENDOR: {}", (const char*)glGetString(GL_VENDOR)));
-        LOG().write_info(format("GL_RENDERER: {}", (const char*)glGetString(GL_RENDERER)));
-        LOG().write_info(format("GL_VERSION: {}", (const char*)glGetString(GL_VERSION)));
+        LOG().write_info("GL_VENDOR: "s + (const char*)glGetString(GL_VENDOR));
+        LOG().write_info("GL_RENDERER: "s + (const char*)glGetString(GL_RENDERER));
+        LOG().write_info("GL_VERSION: "s + (const char*)glGetString(GL_VERSION));
 
         sprite_font = make_unique<SpriteFont>(dv_base_path() + "/70_data/fonts/ubuntu-b-30-outlined.fnt");
 
@@ -146,7 +145,7 @@ private:
         // Открываем аудио-устройство
         if (Mix_OpenAudio(MIX_DEFAULT_FORMAT, MIX_DEFAULT_FORMAT, 2, 1024) < 0)
         {
-            LOG().write_error(format("App::begin_run(): Mix_OpenAudio() < 0 | {}", Mix_GetError()));
+            LOG().write_error("App::begin_run(): Mix_OpenAudio(...) < 0 | "s + Mix_GetError());
             exit(1);
         }
 
@@ -155,7 +154,7 @@ private:
         Mix_Music* music = Mix_LoadMUS((dv_base_path() + "/70_data/CantinaBand60.wav").c_str());
         if (!music)
         {
-            LOG().write_error(format("App::begin_run(): !music | {}", Mix_GetError()));
+            LOG().write_error("App::begin_run(): !music | "s + Mix_GetError());
             exit(1);
         };
 
@@ -224,7 +223,7 @@ private:
         sprite_batch->sprite.size = { 400, 300 };
         sprite_batch->add_sprite();
 
-        string fps_str = format("ФПС: {}", time().fps());
+        string fps_str = "ФПС: "s + to_string(time().fps());
         sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(400, 300), 0xFF00FF00, radians(rotation));
 
         sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(0, 0), 0xFF00FF00);
@@ -282,7 +281,7 @@ public:
     }
 
     // Значение, которое вернёт main()
-    inline int exit_code() const
+    inline i32 exit_code() const
     {
         return exit_code_;
     }
@@ -294,7 +293,7 @@ public:
     }
 
     // Запросить завершение программы
-    void exit(int exit_code = 0)
+    void exit(i32 exit_code = 0)
     {
         exit_code_ = exit_code;
         exiting_ = true;
@@ -306,7 +305,7 @@ public:
     }
 
     // Запуск приложения
-    void run(int argc, char* argv[])
+    void run(i32 argc, char* argv[])
     {
 #ifndef NDEBUG
         // Убеждаемся, что функция run() не была вызвана повторно
@@ -317,7 +316,7 @@ public:
 
         // Копируем аргументы в вектор строк
         args_.reserve(argc);
-        for (int i = 0; i < argc; ++i)
+        for (i32 i = 0; i < argc; ++i)
             args_.push_back(argv[i]);
 
         LOG().open(dv_pref_path(ORG_NAME, APP_NAME) + "/log.txt");
