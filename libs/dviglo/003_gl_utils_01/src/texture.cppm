@@ -10,14 +10,24 @@ import <memory>; // unique_ptr
 
 using namespace std;
 
-export class dvTexture
+export class DvTexture
 {
 private:
     // Идентификатор объекта OpenGL
-    GLuint gpu_object_name_ = 0;
+    GLuint gpu_object_name_;
 
 public:
-    dvTexture(const string& file_path)
+    inline GLuint gpu_object_name() const
+    {
+        return gpu_object_name_;
+    }
+
+    DvTexture()
+    {
+        gpu_object_name_ = 0;
+    }
+
+    DvTexture(const string& file_path)
     {
         unique_ptr<dvImage> image = make_unique<dvImage>(file_path);
 
@@ -35,18 +45,33 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    // Запрещаем копировать объект, так как если в одной из копий будет вызван деструктор,
-    // все другие объекты будут ссылаться на уничтоженный объект OpenGL
-    dvTexture(const dvTexture&) = delete;
-    dvTexture& operator=(const dvTexture&) = delete;
-
-    // Но разрешаем перемещение, чтобы было можно хранить текстуру в векторе
-    dvTexture(dvTexture&&) = default;
-    dvTexture& operator=(dvTexture&&) = default;
-
-    ~dvTexture()
+    ~DvTexture()
     {
         glDeleteTextures(1, &gpu_object_name_); // Проверка на 0 не нужна
+        gpu_object_name_ = 0;
+    }
+
+    // Запрещаем копировать объект, так как если в одной из копий будет вызван деструктор,
+    // все другие объекты будут ссылаться на уничтоженный объект OpenGL
+    DvTexture(const DvTexture&) = delete;
+    DvTexture& operator=(const DvTexture&) = delete;
+
+    // Но разрешаем перемещение, чтобы можно было хранить объекты в векторе
+    DvTexture(DvTexture&& other)
+    {
+        gpu_object_name_ = other.gpu_object_name_;
+        other.gpu_object_name_ = 0;
+    }
+
+    DvTexture& operator=(DvTexture&& other)
+    {
+        if (this != &other)
+        {
+            gpu_object_name_ = other.gpu_object_name_;
+            other.gpu_object_name_ = 0;
+        }
+
+        return *this;
     }
 
     inline void bind()

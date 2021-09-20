@@ -5,7 +5,7 @@ export import sprite_font; // DvSpriteFont
 
 // Модули движка
 import dviglo.base; // u32
-import dviglo.shader_program; // dvShaderProgram
+import dviglo.shader_program; // DvShaderProgram
 import dviglo.std_string_utils; // next_code_point()
 
 using namespace glm;
@@ -46,7 +46,7 @@ private:
     u32 t_num_vertices_ = 0;
 
     // Шейдерная программа для рендеринга треугольников
-    dvShaderProgram t_shader_program_{TRIANGLE_VERTEX_SHADER_SRC, TRIANGLE_FRAGMENT_SHADER_SRC};
+    DvShaderProgram t_shader_program_{TRIANGLE_VERTEX_SHADER_SRC, TRIANGLE_FRAGMENT_SHADER_SRC};
 
     // Vertex Buffer Object - объект на GPU, хранящий вершины треугольников
     GLuint t_vbo_name_;
@@ -134,7 +134,7 @@ private:
     u32 num_sprites_ = 0;
 
     // Шейдерная программа для рендеринга спрайтов
-    dvShaderProgram s_shader_program_{SPRITE_VERTEX_SHADER_SRC, SPRITE_FRAGMENT_SHADER_SRC, SPRITE_GEOMETRY_SHADER_SRC};
+    DvShaderProgram s_shader_program_{SPRITE_VERTEX_SHADER_SRC, SPRITE_FRAGMENT_SHADER_SRC, SPRITE_GEOMETRY_SHADER_SRC};
 
     // Vertex Buffer Object - объект на GPU, хранящий спрайты
     GLuint s_vbo_name_;
@@ -143,18 +143,18 @@ private:
     GLuint s_vao_name_;
 
     // Текущая текстура
-    dvTexture* texture_ = nullptr;
+    DvTexture* texture_ = nullptr;
 
 public:
 
     // Возвращает текущую текстуру
-    inline dvTexture* texture() const
+    inline DvTexture* texture() const
     {
         return texture_;
     }
 
     // Устанавливает текущую текстуру. Если ссылка отличается от прежнего значения и происходит накопление спрайтов, то вызывается flush()
-    inline void texture(dvTexture* value)
+    inline void texture(DvTexture* value)
     {
         if (texture_ != value && num_sprites_)
             flush();

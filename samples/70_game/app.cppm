@@ -132,9 +132,9 @@ private:
 
         sprite_font = make_unique<DvSpriteFont>(dv_base_path() + "/70_data/fonts/ubuntu-b-30-outlined.fnt");
 
-        //texture = make_unique<dvTexture>(base_path() + "/70_data/awesomeface.png");
-        //texture = make_unique<dvTexture>(base_path() + "/70_data/fonts/ubuntu-b-30-outlined_0.png");
-        texture = make_unique<dvTexture>(dv_base_path() + "/70_data/1.png");
+        //texture = make_unique<DvTexture>(base_path() + "/70_data/awesomeface.png");
+        //texture = make_unique<DvTexture>(base_path() + "/70_data/fonts/ubuntu-b-30-outlined_0.png");
+        texture = make_unique<DvTexture>(dv_base_path() + "/70_data/1.png");
 
         sprite_batch = make_unique<DvSpriteBatch>();
 
@@ -272,7 +272,7 @@ public:
         return time_;
     }
 
-    unique_ptr<dvTexture> texture;
+    unique_ptr<DvTexture> texture;
 
     // Аргументы командной строки. Инициализируется в run()
     inline const vector<string>& args()

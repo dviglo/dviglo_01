@@ -1,9 +1,8 @@
 export module dviglo.shader_program;
 
+// Модули движка
 export import <GL/glew.h>;
 export import <glm/mat2x2.hpp>;
-
-// Модули движка
 import dviglo.file;
 import dviglo.log;
 import dviglo.std_string_utils;
@@ -40,32 +39,25 @@ static GLuint compile_shader(const string& src, GLenum type)
     return 0;
 }
 
-export class dvShaderProgram
+export class DvShaderProgram
 {
 private:
     // Идентификатор объекта OpenGL
-    GLuint gpu_object_name_ = 0;
+    GLuint gpu_object_name_;
 
 public:
-    // Идентификатор объекта OpenGL
     inline GLuint gpu_object_name() const
     {
         return gpu_object_name_;
     }
 
-    // Запрещаем копировать объект, так как если в одной из копий будет вызван деструктор,
-    // все другие объекты будут ссылаться на уничтоженный объект OpenGL
-    dvShaderProgram(const dvShaderProgram&) = delete;
-    dvShaderProgram& operator=(const dvShaderProgram&) = delete;
-
-    // Но разрешаем перемещение, чтобы было можно хранить текстуру в векторе
-    dvShaderProgram(dvShaderProgram&&) = default;
-    dvShaderProgram& operator=(dvShaderProgram&&) = default;
-
-    dvShaderProgram() = default;
+    DvShaderProgram()
+    {
+        gpu_object_name_ = 0;
+    }
 
     // Геометрический шейдер может отсутствовать
-    dvShaderProgram(const string& vertex_shader_src, const string& fragment_shader_src, const string& geometry_shader_src = string())
+    DvShaderProgram(const string& vertex_shader_src, const string& fragment_shader_src, const string& geometry_shader_src = string())
     {
         GLuint vertex_shader = compile_shader(vertex_shader_src, GL_VERTEX_SHADER);
         if (!vertex_shader)
@@ -121,9 +113,33 @@ public:
         glDeleteShader(geometry_shader); // Проверка на 0 не нужна
     }
 
-    ~dvShaderProgram()
+    ~DvShaderProgram()
     {
         glDeleteProgram(gpu_object_name_); // Проверка на 0 не нужна
+        gpu_object_name_ = 0;
+    }
+
+    // Запрещаем копировать объект, так как если в одной из копий будет вызван деструктор,
+    // все другие объекты будут ссылаться на уничтоженный объект OpenGL
+    DvShaderProgram(const DvShaderProgram&) = delete;
+    DvShaderProgram& operator=(const DvShaderProgram&) = delete;
+
+    // Но разрешаем перемещение, чтобы можно было хранить объекты в векторе
+    DvShaderProgram(DvShaderProgram&& other)
+    {
+        gpu_object_name_ = other.gpu_object_name_;
+        other.gpu_object_name_ = 0;
+    }
+
+    DvShaderProgram& operator=(DvShaderProgram&& other)
+    {
+        if (this != &other)
+        {
+            gpu_object_name_ = other.gpu_object_name_;
+            other.gpu_object_name_ = 0;
+        }
+
+        return *this;
     }
 
     inline void use() const
@@ -202,24 +218,24 @@ public:
         glUniformMatrix4fv(location, 1, GL_FALSE, &mat[0][0]);
     }
 
-    static dvShaderProgram from_files(const string& vertex_shader_path, const string& fragment_shader_path, const string& geometry_shader_path = string())
+    static DvShaderProgram from_files(const string& vertex_shader_path, const string& fragment_shader_path, const string& geometry_shader_path = string())
     {
         string vs_src = dv_file::read_all_text(vertex_shader_path);
         if (vs_src.empty())
-            return dvShaderProgram(); // Если не удалось прочесть файл, сообщение об ошибке уже выведено в лог
+            return DvShaderProgram(); // Если не удалось прочесть файл, сообщение об ошибке уже выведено в лог
 
         string fs_src = dv_file::read_all_text(fragment_shader_path);
         if (fs_src.empty())
-            return dvShaderProgram();
+            return DvShaderProgram();
 
         string gs_src;
         if (!geometry_shader_path.empty()) // Геометрический шейдер может отсутствовать
         {
             gs_src = dv_file::read_all_text(geometry_shader_path);
             if (fs_src.empty())
-                return dvShaderProgram();
+                return DvShaderProgram();
         }
 
-        return dvShaderProgram(vs_src, fs_src, gs_src);
+        return DvShaderProgram(vs_src, fs_src, gs_src);
     }
 };

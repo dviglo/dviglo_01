@@ -1,7 +1,7 @@
 export module sprite_font;
 
 // Модули движка
-export import dviglo.texture; // dvTexture
+export import dviglo.texture; // DvTexture
 import <pugixml.hpp>;
 import dviglo.log; // dvLog
 import dviglo.path; // dv_path
@@ -45,11 +45,11 @@ private:
     string face_; // Название исходного шрифта (из которого был сгенерирован растровый шрифт)
     i32 size_ = 0; // Размер исходного шрифта
     i32 line_height_ = 0; // Высота растрового шрифта
-    vector<dvTexture> textures_; // Текстурные атласы с символами
+    vector<DvTexture> textures_; // Текстурные атласы с символами
     unordered_map<u32, Glyph> glyphs_; // кодовая позиция -> изображение
 
 public:
-    inline dvTexture& texture(size_t index)
+    inline DvTexture& texture(size_t index)
     {
         return textures_[index];
     }
