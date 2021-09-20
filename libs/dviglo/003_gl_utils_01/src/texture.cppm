@@ -6,7 +6,6 @@ import dviglo.image;
 
 // Стандартная библиотека
 import <string>;
-import <memory>; // unique_ptr
 
 using namespace std;
 
