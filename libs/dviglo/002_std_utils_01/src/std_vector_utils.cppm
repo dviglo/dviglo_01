@@ -1,6 +1,6 @@
 export module dviglo.std_vector_utils;
 
-// Стандартная библиотека
+// РЎС‚Р°РЅРґР°СЂС‚РЅР°СЏ Р±РёР±Р»РёРѕС‚РµРєР°
 import <algorithm>; // find
 
 using namespace std;
