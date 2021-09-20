@@ -42,6 +42,45 @@ public:
         return data_;
     }
 
+private:
+    DvImage() = default;
+
+    // Запрещаем копировать объект, размер данных большой, операция тяжёлая
+    DvImage(const DvImage&) = delete;
+    DvImage& operator=(const DvImage&) = delete;
+
+    // Но разрешаем перемещение, чтобы можно было хранить объекты в векторе
+    DvImage(DvImage&& other)
+    {
+        width_ = other.width_;
+        height_ = other.height_;
+        num_components_ = other.num_components_;
+        data_ = other.data_;
+
+        other.width_ = 0;
+        other.height_ = 0;
+        other.num_components_ = 0;
+        other.data_ = nullptr;
+    }
+
+    DvImage& operator=(DvImage&& other)
+    {
+        if (this != &other)
+        {
+            width_ = other.width_;
+            height_ = other.height_;
+            num_components_ = other.num_components_;
+            data_ = other.data_;
+
+            other.width_ = 0;
+            other.height_ = 0;
+            other.num_components_ = 0;
+            other.data_ = nullptr;
+        }
+
+        return *this;
+    }
+
 public:
     DvImage(const std::string& path)
     {

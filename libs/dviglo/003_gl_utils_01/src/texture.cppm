@@ -29,18 +29,18 @@ public:
 
     DvTexture(const string& file_path)
     {
-        unique_ptr<DvImage> image = make_unique<DvImage>(file_path);
+        DvImage image(file_path);
 
         GLenum format;
 
-        if (image->num_components() == 3)
+        if (image.num_components() == 3)
             format = GL_RGB;
         else
             format = GL_RGBA;
 
         glGenTextures(1, &gpu_object_name_);
         glBindTexture(GL_TEXTURE_2D, gpu_object_name_);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width(), image->height(), 0, format, GL_UNSIGNED_BYTE, image->data());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, format, GL_UNSIGNED_BYTE, image.data());
         glGenerateMipmap(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
