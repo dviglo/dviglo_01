@@ -5,7 +5,7 @@ export import sprite_font; // DvSpriteFont
 
 // Модули движка
 import dviglo.base; // u32
-import dviglo.shader_program;
+import dviglo.shader_program; // dvShaderProgram
 import dviglo.std_string_utils; // next_code_point()
 
 using namespace glm;
