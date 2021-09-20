@@ -8,7 +8,7 @@ file(GLOB_RECURSE source_files *.cpp *.h *.cppm)
 dviglo_add_executable(${target_name} ${source_files})
 
 # Подключаем библиотеки
-target_link_libraries(${target_name} PRIVATE dviglo_sdl_utils_01 dviglo_gl_utils_01 dviglo_localization_01 sdl_mixer_01 pugixml_01 rapidjson_01)
+target_link_libraries(${target_name} PRIVATE dviglo_sdl_utils_01 dviglo_sprite_batch_01 dviglo_localization_01 sdl_mixer_01 rapidjson_01)
 
 # Куда будет помещён скомпилированный исполняемый файл
 set(bin_dir ${CMAKE_BINARY_DIR}/bin)

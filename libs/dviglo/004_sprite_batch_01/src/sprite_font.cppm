@@ -39,7 +39,7 @@ export struct Glyph
     i16 page = numeric_limits<i16>::max();
 };
 
-export class SpriteFont
+export class DvSpriteFont
 {
 private:
     string face_; // Название исходного шрифта (из которого был сгенерирован растровый шрифт)
@@ -59,27 +59,27 @@ public:
         return glyphs_[code_point];
     }
 
-    SpriteFont(const string& file_path)
+    DvSpriteFont(const string& file_path)
     {
         xml_document doc;
         xml_parse_result result = doc.load_file(file_path.c_str());
         if (!result)
         {
-            LOG().write_error("SpriteFont::SpriteFont(file_path): !result | file_path = " + file_path);
+            LOG().write_error("DvSpriteFont::DvSpriteFont(file_path): !result | file_path = " + file_path);
             return;
         }
 
         xml_node root_node = doc.first_child();
         if (root_node.name() != string("font"))
         {
-            LOG().write_error("SpriteFont::SpriteFont(file_path): root_node.name() != string(\"font\") | file_path = " + file_path);
+            LOG().write_error("DvSpriteFont::DvSpriteFont(file_path): root_node.name() != string(\"font\") | file_path = " + file_path);
             return;
         }
 
         xml_node pages_node = root_node.child("pages");
         if (!pages_node)
         {
-            LOG().write_error("SpriteFont::SpriteFont(file_path): !pages_node | file_path = " + file_path);
+            LOG().write_error("DvSpriteFont::DvSpriteFont(file_path): !pages_node | file_path = " + file_path);
             return;
         }
 
@@ -99,7 +99,7 @@ public:
         {
             if (!page_node)
             {
-                LOG().write_error("SpriteFont::SpriteFont(file_path): !page_node | file_path = " + file_path);
+                LOG().write_error("DvSpriteFont::DvSpriteFont(file_path): !page_node | file_path = " + file_path);
                 return;
             }
 

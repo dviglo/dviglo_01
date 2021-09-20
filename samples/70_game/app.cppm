@@ -130,13 +130,13 @@ private:
         LOG().write_info("GL_RENDERER: "s + (const char*)glGetString(GL_RENDERER));
         LOG().write_info("GL_VERSION: "s + (const char*)glGetString(GL_VERSION));
 
-        sprite_font = make_unique<SpriteFont>(dv_base_path() + "/70_data/fonts/ubuntu-b-30-outlined.fnt");
+        sprite_font = make_unique<DvSpriteFont>(dv_base_path() + "/70_data/fonts/ubuntu-b-30-outlined.fnt");
 
         //texture = make_unique<dvTexture>(base_path() + "/70_data/awesomeface.png");
         //texture = make_unique<dvTexture>(base_path() + "/70_data/fonts/ubuntu-b-30-outlined_0.png");
         texture = make_unique<dvTexture>(dv_base_path() + "/70_data/1.png");
 
-        sprite_batch = make_unique<SpriteBatch>();
+        sprite_batch = make_unique<DvSpriteBatch>();
 
 
         // Прячем задние стороны спрайтов, чтобы быть уверенным, что все спрайты отрисовываются правильно против часовой стрелки
@@ -332,7 +332,7 @@ public:
 
     // ================= ВРЕМЕННО
 
-    unique_ptr<SpriteBatch> sprite_batch;
+    unique_ptr<DvSpriteBatch> sprite_batch;
 
-    unique_ptr<SpriteFont> sprite_font;
+    unique_ptr<DvSpriteFont> sprite_font;
 };
