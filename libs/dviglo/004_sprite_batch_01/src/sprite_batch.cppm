@@ -1,6 +1,6 @@
 export module sprite_batch;
 
-// Модули приложения
+// Модули библиотеки
 export import sprite_font; // DvSpriteFont
 
 // Модули движка
