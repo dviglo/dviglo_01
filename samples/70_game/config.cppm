@@ -14,7 +14,7 @@ import consts;
 // Модули движка
 import <string>;
 import dviglo.file;  // read_all_text()
-import dviglo.log; // dvLog
+import dviglo.log; // DvLog
 import dviglo.sdl_utils; // dv_pref_path()
 
 // Стандартная библиотека

@@ -13,7 +13,7 @@ import <string>;
 
 using namespace std;
 
-export class dvImage
+export class DvImage
 {
 private:
     int32_t width_;
@@ -43,12 +43,12 @@ public:
     }
 
 public:
-    dvImage(const std::string& path)
+    DvImage(const std::string& path)
     {
         data_ = stbi_load(path.c_str(), &width_, &height_, &num_components_, 0);
     }
 
-    ~dvImage()
+    ~DvImage()
     {
         stbi_image_free(data_);
     }

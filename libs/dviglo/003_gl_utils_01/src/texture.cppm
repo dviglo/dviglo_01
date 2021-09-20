@@ -29,7 +29,7 @@ public:
 
     DvTexture(const string& file_path)
     {
-        unique_ptr<dvImage> image = make_unique<dvImage>(file_path);
+        unique_ptr<DvImage> image = make_unique<DvImage>(file_path);
 
         GLenum format;
 

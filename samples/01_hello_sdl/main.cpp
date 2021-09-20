@@ -6,7 +6,7 @@
 
 // Модули движка
 import dviglo.log; // LOG()
-import dviglo.scope_guard; // dvScopeGuard
+import dviglo.scope_guard; // DvScopeGuard
 import dviglo.sdl_utils; // dv_pref_path()
 
 using namespace std;
@@ -19,8 +19,8 @@ int SDL_main(int argc, char* argv[])
 
     // Лог будет закрыт, когда объект sg_log_close выйдет из области видимости
     // (лямбда-функция вызывается в деструкторе этого объекта).
-    // Так как этот dvScopeGuard создан первым, то его деструктор будет вызван последним (такова особенность C++)
-    const dvScopeGuard sg_log_close = [] { LOG().close(); };
+    // Так как этот DvScopeGuard создан первым, то его деструктор будет вызван последним (такова особенность C++)
+    const DvScopeGuard sg_log_close = [] { LOG().close(); };
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -30,8 +30,8 @@ int SDL_main(int argc, char* argv[])
         return 1;
     }
 
-    // Этот dvScopeGuard создан вторым, поэтому эта лямда-функция будет вызвана перед закрытием лога
-    const dvScopeGuard sg_sdl_quit = [] { SDL_Quit(); };
+    // Этот DvScopeGuard создан вторым, поэтому эта лямда-функция будет вызвана перед закрытием лога
+    const DvScopeGuard sg_sdl_quit = [] { SDL_Quit(); };
 
     SDL_Window* window = SDL_CreateWindow(
         "Окно закроется через 3 секунды",
@@ -49,7 +49,7 @@ int SDL_main(int argc, char* argv[])
         return 1;
     }
 
-    const dvScopeGuard sg_destroy_window = [window] { SDL_DestroyWindow(window); };
+    const DvScopeGuard sg_destroy_window = [window] { SDL_DestroyWindow(window); };
 
     SDL_Surface* screen_surface = SDL_GetWindowSurface(window);
     SDL_FillRect(screen_surface, nullptr, SDL_MapRGB(screen_surface->format, 0x10, 0x90, 0x90));

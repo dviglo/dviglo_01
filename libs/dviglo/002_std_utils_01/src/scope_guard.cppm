@@ -1,13 +1,13 @@
 /*
-    Вспомогательный объект, который выполнит какую-то функцию, когда он выйдет из области видимости.
+    Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РѕР±СЉРµРєС‚, РєРѕС‚РѕСЂС‹Р№ РІС‹РїРѕР»РЅРёС‚ РєР°РєСѓСЋ-С‚Рѕ С„СѓРЅРєС†РёСЋ, РєРѕРіРґР° РѕРЅ РІС‹Р№РґРµС‚ РёР· РѕР±Р»Р°СЃС‚Рё РІРёРґРёРјРѕСЃС‚Рё.
 
-    Пример использования:
+    РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ:
     {
-        dvScopeGuard sg1([] { cout << "sg1 "; });
-        dvScopeGuard sg2 = [] { cout << "sg2 "; };
+        DvScopeGuard sg1([] { cout << "sg1 "; });
+        DvScopeGuard sg2 = [] { cout << "sg2 "; };
     }
 
-    Будет выведено "sg2 sg1 " так как в C++ деструкторы выполняются в реверсном порядке вызовов конструкторов.
+    Р‘СѓРґРµС‚ РІС‹РІРµРґРµРЅРѕ "sg2 sg1 " С‚Р°Рє РєР°Рє РІ C++ РґРµСЃС‚СЂСѓРєС‚РѕСЂС‹ РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ РІ СЂРµРІРµСЂСЃРЅРѕРј РїРѕСЂСЏРґРєРµ РІС‹Р·РѕРІРѕРІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂРѕРІ.
 */
 
 export module dviglo.scope_guard;
@@ -17,25 +17,25 @@ import <concepts>;
 using namespace std;
 
 export template<typename F>
-// Убеждаемся, что сигнатура лямбы правильная
+// РЈР±РµР¶РґР°РµРјСЃСЏ, С‡С‚Рѕ СЃРёРіРЅР°С‚СѓСЂР° Р»СЏРјР±С‹ РїСЂР°РІРёР»СЊРЅР°СЏ
 requires invocable<F> && requires(F f) { { f() } -> same_as<void>; }
-class dvScopeGuard
+class DvScopeGuard
 {
 private:
     F func_;
 
 public:
-    // Запрещаем копировать объект
-    dvScopeGuard(const dvScopeGuard&) = delete;
-    dvScopeGuard& operator=(const dvScopeGuard&) = delete;
+    // Р—Р°РїСЂРµС‰Р°РµРј РєРѕРїРёСЂРѕРІР°С‚СЊ РѕР±СЉРµРєС‚
+    DvScopeGuard(const DvScopeGuard&) = delete;
+    DvScopeGuard& operator=(const DvScopeGuard&) = delete;
 
-    dvScopeGuard(F&& func)
+    DvScopeGuard(F&& func)
         : func_(func)
     {
     }
 
-    // В деструкторе вызываем функцию
-    ~dvScopeGuard()
+    // Р’ РґРµСЃС‚СЂСѓРєС‚РѕСЂРµ РІС‹Р·С‹РІР°РµРј С„СѓРЅРєС†РёСЋ
+    ~DvScopeGuard()
     {
         func_();
     }

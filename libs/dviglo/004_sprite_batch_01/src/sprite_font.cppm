@@ -3,7 +3,7 @@ export module sprite_font;
 // Модули движка
 export import dviglo.texture; // DvTexture
 import <pugixml.hpp>;
-import dviglo.log; // dvLog
+import dviglo.log; // DvLog
 import dviglo.path; // dv_path
 
 // Стандартная библиотека

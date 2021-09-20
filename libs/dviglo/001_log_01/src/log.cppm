@@ -16,7 +16,7 @@ export import <string>;
 
 using namespace std;
 
-export class dvLog
+export class DvLog
 {
 public:
     enum class MessageType : i32
@@ -80,9 +80,9 @@ public:
     }
 
 public:
-    dvLog() = default;
+    DvLog() = default;
     
-    ~dvLog()
+    ~DvLog()
     {
         if (is_open())
         {
@@ -94,17 +94,17 @@ public:
 
 public:
     // Глобальный лог для удобства. Также можно создавать специализированные логи через конструктор
-    static dvLog& get()
+    static DvLog& get()
     {
         // В C++11 синглтон Майерса является потокобезопасным: https://stackoverflow.com/a/1661564
-        static dvLog instance;
+        static DvLog instance;
         return instance;
     }
 };
 
-export inline dvLog& LOG()
+export inline DvLog& LOG()
 {
-    return dvLog::get();
+    return DvLog::get();
 }
 
 static inline string get_timestamp()
@@ -119,7 +119,7 @@ static inline string get_timestamp()
     return ret;
 }
 
-static inline const string& to_string(dvLog::MessageType message_type)
+static inline const string& to_string(DvLog::MessageType message_type)
 {
     assert((i32)message_type >= 0 && (i32)message_type <= 3);
 
@@ -133,7 +133,7 @@ static inline const string& to_string(dvLog::MessageType message_type)
     return strings[(i32)message_type];
 }
 
-void dvLog::write(MessageType message_type, const string& message)
+void DvLog::write(MessageType message_type, const string& message)
 {
     if (message_type == MessageType::none)
         return;

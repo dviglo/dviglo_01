@@ -9,10 +9,10 @@ import sprite_batch;
 import <glm/trigonometric.hpp>; // radians()
 import <SDL.h>;
 import <SDL_mixer.h>;
-import dviglo.localization; // dvLocalization
-import dviglo.scope_guard; // dvScopeGuard
+import dviglo.localization; // DvLocalization
+import dviglo.scope_guard; // DvScopeGuard
 import dviglo.sdl_utils; // dv_base_path(), dv_pref_path()
-import dviglo.time; // dvTime
+import dviglo.time; // DvTime
 
 // Стандартная библиотека
 import <string>;
@@ -44,11 +44,11 @@ private:
     // Был ли запрос на завершение программы
     bool exiting_ = false;
 
-    dvLocalization l10n_{&LOG()};
+    DvLocalization l10n_{&LOG()};
 
     SDL_Window* window_ = nullptr;
 
-    dvTime time_;
+    DvTime time_;
 
     float rotation = 0.f;
 
@@ -71,7 +71,7 @@ private:
             return;
         }
 
-        const dvScopeGuard sg_sdl_quit = [] { SDL_Quit(); };
+        const DvScopeGuard sg_sdl_quit = [] { SDL_Quit(); };
 
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -98,7 +98,7 @@ private:
             return;
         }
 
-        const dvScopeGuard sg_destroy_window = [this]
+        const DvScopeGuard sg_destroy_window = [this]
         {
             SDL_DestroyWindow(window_);
             window_ = nullptr;
@@ -112,7 +112,7 @@ private:
             return;
         }
 
-        const dvScopeGuard sg_gl_delete_context = [gl_context] { SDL_GL_DeleteContext(gl_context); };
+        const DvScopeGuard sg_gl_delete_context = [gl_context] { SDL_GL_DeleteContext(gl_context); };
 
         SDL_GL_SetSwapInterval(0); // Отключаем вертикальную синхронизацию
         //SDL_GL_SetSwapInterval(-1);
@@ -149,7 +149,7 @@ private:
             exit(1);
         }
 
-        const dvScopeGuard sg_close_audio = [] { Mix_CloseAudio(); };
+        const DvScopeGuard sg_close_audio = [] { Mix_CloseAudio(); };
 
         Mix_Music* music = Mix_LoadMUS((dv_base_path() + "/70_data/CantinaBand60.wav").c_str());
         if (!music)
@@ -158,7 +158,7 @@ private:
             exit(1);
         };
 
-        const dvScopeGuard sg_free_music = [music] { Mix_FreeMusic(music); };
+        const DvScopeGuard sg_free_music = [music] { Mix_FreeMusic(music); };
 
         Mix_PlayMusic(music, -1);
 
@@ -267,7 +267,7 @@ private:
     }
 
 public:
-    inline const dvTime& time() const
+    inline const DvTime& time() const
     {
         return time_;
     }
@@ -299,7 +299,7 @@ public:
         exiting_ = true;
     }
 
-    inline dvLocalization& l10n()
+    inline DvLocalization& l10n()
     {
         return l10n_;
     }

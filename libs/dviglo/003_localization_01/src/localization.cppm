@@ -8,7 +8,7 @@ export module dviglo.localization;
 // Модули движка
 import <rapidjson/error/en.h>;
 import dviglo.file; // dv_file::read_all_text()
-import dviglo.log; // dvLog
+import dviglo.log; // DvLog
 import dviglo.std_vector_utils; // contains()
 
 // Стандартная библиотека
@@ -18,7 +18,7 @@ import <format>;
 using namespace rapidjson;
 using namespace std;
 
-export class dvLocalization
+export class DvLocalization
 {
 private:
     // Названия языков
@@ -31,7 +31,7 @@ private:
     unordered_map<string, unordered_map<string, string>> strings_;
 
 public:
-    dvLog* log;
+    DvLog* log;
 
     // Не писать предупреждения в лог (только ошибки)
     bool silent = false;
@@ -54,7 +54,7 @@ public:
         if (num_languages() == 0)
         {
             if (log)
-                log->write_error("dvLocalization::current_language_index(i32): num_languages() == 0");
+                log->write_error("DvLocalization::current_language_index(i32): num_languages() == 0");
 
             return;
         }
@@ -62,7 +62,7 @@ public:
         if (index < 0 || index >= num_languages())
         {
             if (log)
-                log->write_error("dvLocalization::current_language_index(i32): index < 0 || index >= num_languages()");
+                log->write_error("DvLocalization::current_language_index(i32): index < 0 || index >= num_languages()");
 
             return;
         }
@@ -76,7 +76,7 @@ public:
         if (current_language_index_ == -1)
         {
             if (log)
-                log->write_error("dvLocalization::current_language(): current_language_index_ == -1");
+                log->write_error("DvLocalization::current_language(): current_language_index_ == -1");
 
             return string();
         }
@@ -106,7 +106,7 @@ public:
         if (num_languages() == 0)
         {
             if (log && !silent)
-                log->write_warning("dvLocalization::get(): num_languages() == 0");
+                log->write_warning("DvLocalization::get(): num_languages() == 0");
 
             return id;
         }
@@ -116,7 +116,7 @@ public:
         if (i == m.end()) // Нет строки с таким идентификатором
         {
             if (log && !silent)
-                log->write_warning(format("dvLocalization::get(): i == m.end() | id = {} | current_language() = {}", id, current_language()));
+                log->write_warning(format("DvLocalization::get(): i == m.end() | id = {} | current_language() = {}", id, current_language()));
 
             return id;
         }
@@ -141,7 +141,7 @@ public:
         if (!parse_result)
         {
             LOG().write_error(
-                format("dvLocalization::load_json_file(): !parse_result | path = {} | offset = {} | {}",
+                format("DvLocalization::load_json_file(): !parse_result | path = {} | offset = {} | {}",
                     path, parse_result.Offset(), GetParseError_En(parse_result.Code()))
             );
 
@@ -150,7 +150,7 @@ public:
 
         if (!document.IsObject())
         {
-            LOG().write_error("dvLocalization::load_json_file(): !parse_result | path = " + path);
+            LOG().write_error("DvLocalization::load_json_file(): !parse_result | path = " + path);
             return;
         }
 
@@ -158,7 +158,7 @@ public:
         {
             if (!member.value.IsObject())
             {
-                LOG().write_error("dvLocalization::load_json_file(): !member.value.IsObject() | path = " + path);
+                LOG().write_error("DvLocalization::load_json_file(): !member.value.IsObject() | path = " + path);
                 return;
             }
 
@@ -168,7 +168,7 @@ public:
             {
                 if (!translation.value.IsString())
                 {
-                    LOG().write_error("dvLocalization::load_json_file(): !translation.value.IsString() | path = " + path);
+                    LOG().write_error("DvLocalization::load_json_file(): !translation.value.IsString() | path = " + path);
                     return;
                 }
 
@@ -179,7 +179,7 @@ public:
         }
     }
 
-    dvLocalization(dvLog* log = nullptr)
+    DvLocalization(DvLog* log = nullptr)
         : log(log)
     {
     }

@@ -5,7 +5,7 @@ export import dviglo.base;
 import <SDL.h>;
 
 // Промежуток времени с прошлого кадра
-export class dvTime
+export class DvTime
 {
 private:
     // Номер кадра.

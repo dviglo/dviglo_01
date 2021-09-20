@@ -2,7 +2,7 @@ export module dviglo.sdl_utils;
 
 // Модули движка
 import <SDL.h>; // SDL_GetPrefPath(), SDL_GetBasePath()
-import dviglo.log; // dvLog
+import dviglo.log; // DvLog
 import dviglo.path; // dv_path
 
 // Стандартная библиотека
