@@ -1,11 +1,10 @@
 export module sprite_batch;
 
 // Модули приложения
-export import sprite_font; // SpriteFont
+export import sprite_font; // DvSpriteFont
 
 // Модули движка
 import dviglo.base; // u32
-import dviglo.sdl_utils; // dv_base_path()
 import dviglo.shader_program;
 import dviglo.std_string_utils; // next_code_point()
 
@@ -15,7 +14,9 @@ using namespace std;
 // Так как участки памяти копируются напрямую, то убеждаемся, что структура имеет ожидаемый размер
 static_assert(sizeof(vec2) == 2 * 4);
 
-export class SpriteBatch
+#include "shaders.inl"
+
+export class DvSpriteBatch
 {
 
 // ============================ Пакетный рендеринг треугольников ============================
@@ -45,7 +46,7 @@ private:
     u32 t_num_vertices_ = 0;
 
     // Шейдерная программа для рендеринга треугольников
-    dvShaderProgram t_shader_program_{dv_base_path() + "/70_data/shaders/sprite_batch_triangles.vert", dv_base_path() + "/70_data/shaders/sprite_batch_triangles.frag"};
+    dvShaderProgram t_shader_program_{TRIANGLE_VERTEX_SHADER_SRC, TRIANGLE_FRAGMENT_SHADER_SRC};
 
     // Vertex Buffer Object - объект на GPU, хранящий вершины треугольников
     GLuint t_vbo_name_;
@@ -133,9 +134,7 @@ private:
     u32 num_sprites_ = 0;
 
     // Шейдерная программа для рендеринга спрайтов
-    dvShaderProgram s_shader_program_{dv_base_path() + "/70_data/shaders/sprite_batch_sprites.vert",
-                                      dv_base_path() + "/70_data/shaders/sprite_batch_sprites.frag",
-                                      dv_base_path() + "/70_data/shaders/sprite_batch_sprites.geom"};
+    dvShaderProgram s_shader_program_{SPRITE_VERTEX_SHADER_SRC, SPRITE_FRAGMENT_SHADER_SRC, SPRITE_GEOMETRY_SHADER_SRC};
 
     // Vertex Buffer Object - объект на GPU, хранящий спрайты
     GLuint s_vbo_name_;
@@ -194,7 +193,7 @@ private:
 
 public:
 
-    SpriteBatch()
+    DvSpriteBatch()
     {
         // ================================= Треугольники =================================
 
@@ -292,7 +291,7 @@ public:
         glBindVertexArray(0);
     }
 
-    ~SpriteBatch()
+    ~DvSpriteBatch()
     {
         glDeleteBuffers(1, &t_vbo_name_);
         glDeleteVertexArrays(1, &t_vao_name_);
@@ -365,7 +364,7 @@ public:
 
 // ============================ Используем пакетный рендерер спарайтов ============================
 
-    void draw_string(const string& text, SpriteFont* font, const vec2& position, u32 color = 0xFFFFFFFF, float rotation = 0.0f/*, float fontSize, const Vector2& position, u32 color = 0xFFFFFFFF,
+    void draw_string(const string& text, DvSpriteFont* font, const vec2& position, u32 color = 0xFFFFFFFF, float rotation = 0.0f/*, float fontSize, const Vector2& position, u32 color = 0xFFFFFFFF,
         float rotation = 0.0f, const Vector2& origin = Vector2::ZERO, const Vector2& scale = Vector2::ONE, FlipMode flipMode = FlipMode::NONE*/)
     {
         texture(&font->texture(0));
