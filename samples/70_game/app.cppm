@@ -205,10 +205,25 @@ private:
 
         SDL_GL_GetDrawableSize(window_, &sprite_batch->screen_size.x, &sprite_batch->screen_size.y);
 
+        // Выключение этого не влияет на ФПС. Видимо упор идёт в одно ядро процессора (приложение однопоточное)
         sprite_batch->alpha_blending(true);
 
 
         //    rotation = 0;
+
+        // Жёлтый треугольник
+        sprite_batch->shape_color(0xFF90FFFF);
+        sprite_batch->triangle.v0.position = vec2(10.0, 10.0);
+        sprite_batch->triangle.v1.position = vec2(10.0, 100.0);
+        sprite_batch->triangle.v2.position = vec2(100.0, 100.0);
+        sprite_batch->add_triangle();
+
+        // Малиновый треугольник
+        sprite_batch->shape_color(0xFFFF90FF);
+        sprite_batch->triangle.v0.position = vec2(10.0, 10.0);
+        sprite_batch->triangle.v1.position = vec2(100.0, 100.0);
+        sprite_batch->triangle.v2.position = vec2(100.0, 10.0);
+        sprite_batch->add_triangle();
 
         sprite_batch->texture(texture.get());
         sprite_batch->sprite.color_ul = 0xFF00FF00;
@@ -225,7 +240,6 @@ private:
 
         string fps_str = "ФПС: "s + to_string(time().fps());
         sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(400, 300), 0xFF00FF00, radians(rotation));
-
         sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(0, 0), 0xFF00FF00);
 
         sprite_batch->flush();

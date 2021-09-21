@@ -26,7 +26,7 @@ private:
     // Атрибуты вершин треугольников
     struct TVertex
     {
-        vec3 position;
+        vec2 position;
 
         // На стороне CPU цвет - u32 (0xAABBGGRR), который интерпретируется как четыре отдельных байта.
         // На стороне GPU цвет автоматически преобразуется в четыре float
@@ -57,7 +57,9 @@ private:
 public:
 
     // Данные для функции add_triangle().
-    // Заполняем заранее выделенную память, вместо передачи кучи аргументов в функцию
+    // Заполняем заранее выделенную память, вместо передачи кучи аргументов в функцию.
+    // Вершины треугольника нужно указывать против часовой стрелки, чтобы лицевая сторона
+    // была повёрнута к зрителю
     struct
     {
         TVertex v0, v1, v2;
@@ -67,6 +69,10 @@ public:
     // Перед вызовом этой функции необходимо заполнить структуру triangle
     void add_triangle()
     {
+        // Рендерили спрайты, а теперь нужно рендерить треугольники
+        if (num_sprites_ > 0)
+            flush();
+
         memcpy(t_vertices_ + t_num_vertices_, &triangle, sizeof(triangle));
         t_num_vertices_ += VERTICES_PER_TRIANGLE;
 
@@ -168,6 +174,10 @@ public:
 
     void add_sprite()
     {
+        // Рендерили треугольники, а теперь нужно рендерить спрайты
+        if (t_num_vertices_ > 0)
+            flush();
+
         memcpy(sprites_ + num_sprites_, &sprite, sizeof(sprite));
         ++num_sprites_;
 
@@ -207,14 +217,17 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertices_), nullptr, GL_DYNAMIC_DRAW);
 
         // Атрибут с координатами
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(TVertex), (const void*)0);
+        size_t offset = 0;
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(TVertex), (const void*)offset);
         glEnableVertexAttribArray(0);
+        offset += sizeof(vec2); // Вычисляем смещение для следующего атрибута
 
         // Атрибут с цветом.
         // На стороне CPU цвет - u32 (0xAABBGGRR), который интерпретируется как четыре отдельных байта.
         // На стороне GPU цвет автоматически преобразуется в четыре float
-        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(TVertex), (const void*)sizeof(vec2));
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(TVertex), (const void*)offset);
         glEnableVertexAttribArray(1);
+        offset += sizeof(u32);
 
         // По умолчанию белый цвет
         shape_color(0xFFFFFFFF);
@@ -234,7 +247,7 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(sprites_), nullptr, GL_DYNAMIC_DRAW);
 
         // sprite.position
-        size_t offset = 0;
+        offset = 0;
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Sprite), (const void*)offset);
         glEnableVertexAttribArray(0);
         offset += sizeof(vec2); // Вычисляем смещение для следующего атрибута
@@ -331,6 +344,7 @@ public:
             t_shader_program_.set("u_scale", vec2(2.0f / screen_size.x, -2.0f / screen_size.y));
 
             // Копируем накопленную геометрию в память видеокарты
+            glBindBuffer(GL_ARRAY_BUFFER, t_vbo_name_);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TVertex) * t_num_vertices_, t_vertices_);
 
             // И отрисовываем её
@@ -350,6 +364,7 @@ public:
             s_shader_program_.set("u_scale", vec2(2.0f / screen_size.x, -2.0f / screen_size.y));
 
             // Копируем накопленную геометрию в память видеокарты
+            glBindBuffer(GL_ARRAY_BUFFER, s_vbo_name_);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Sprite) * num_sprites_, sprites_);
 
             // И отрисовываем её
