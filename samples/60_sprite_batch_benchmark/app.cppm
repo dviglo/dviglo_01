@@ -166,7 +166,6 @@ export struct App
                 sprite_batch->sprite.uv_position = vec2(2.f / 3, 0);
                 sprite_batch->add_sprite();
             }
-
         }
         else if (mode == Mode::not_use_atlas)
         {
