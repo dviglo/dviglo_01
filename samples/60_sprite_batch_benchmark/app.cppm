@@ -242,7 +242,6 @@ export struct App
             case SDLK_F1:
                 use_alpha = !use_alpha;
                 break;
-
             }
             break;
         }

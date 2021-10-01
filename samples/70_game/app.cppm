@@ -55,6 +55,8 @@ private:
 
     ivec2 mouse_pos_;
 
+    Mix_Chunk* sound_;
+
     // Конструктор спрятан, экземляр создаётся в get()
     App()
     {
@@ -170,6 +172,15 @@ private:
         const DvScopeGuard sg_free_music = [music] { Mix_FreeMusic(music); };
 
         Mix_PlayMusic(music, -1);
+
+        sound_ = Mix_LoadWAV((dv_base_path() + "/70_data/fail.wav").c_str());
+        if (!sound_)
+        {
+            LOG().write_error("App::begin_run(): !sound_ | "s + Mix_GetError());
+            exit(1);
+        };
+
+        const DvScopeGuard sg_free_sound = [this] { Mix_FreeChunk(sound_); };
 
         SDL_Event event;
 
@@ -295,6 +306,20 @@ private:
 
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&mouse_pos_.x, &mouse_pos_.y);
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            if (e->button.button == SDL_BUTTON_LEFT)
+                Mix_PlayChannel(-1, sound_, 0);
+            break;
+
+        case SDL_KEYDOWN:
+            switch (e->key.keysym.sym)
+            {
+            case SDLK_ESCAPE:
+                exit(0);
+                break;
+            }
             break;
         }
     }
