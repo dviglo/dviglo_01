@@ -3,12 +3,13 @@ export module app;
 // Модули приложения
 import consts;
 import config;
-import sprite_batch;
 
 // Модули движка
 import <glm/trigonometric.hpp>; // radians()
+import <glm/vec2.hpp>;
 import <SDL.h>;
 import <SDL_mixer.h>;
+import dviglo.sprite_batch; // DvSpriteBatch, DvSpriteFont
 import dviglo.localization; // DvLocalization
 import dviglo.scope_guard; // DvScopeGuard
 import dviglo.sdl_utils; // dv_base_path(), dv_pref_path()
@@ -51,6 +52,8 @@ private:
     DvTime time_;
 
     float rotation = 0.f;
+
+    ivec2 mouse_pos_;
 
     // Конструктор спрятан, экземляр создаётся в get()
     App()
@@ -138,9 +141,15 @@ private:
 
         sprite_batch = make_unique<DvSpriteBatch>();
 
-
         // Прячем задние стороны спрайтов, чтобы быть уверенным, что все спрайты отрисовываются правильно против часовой стрелки
         glEnable(GL_CULL_FACE);
+
+        // Разные тесты
+        //glDisable(GL_CULL_FACE); // По умолчанию
+        //glFrontFace(GL_CCW); // По умолчанию
+        //glFrontFace(GL_CW);
+        //glCullFace(GL_BACK); // По умолчанию
+        //glCullFace(GL_FRONT);
 
         // Открываем аудио-устройство
         if (Mix_OpenAudio(MIX_DEFAULT_FORMAT, MIX_DEFAULT_FORMAT, 2, 1024) < 0)
@@ -225,6 +234,9 @@ private:
         sprite_batch->triangle.v2.position = vec2(100.0, 10.0);
         sprite_batch->add_triangle();
 
+        sprite_batch->shape_color(0xFFFFFF90);
+        sprite_batch->fill_aabb({10.0f, 300.f}, {310, 550.f});
+
         sprite_batch->texture(texture.get());
         sprite_batch->sprite.color_ul = 0xFF00FF00;
         sprite_batch->sprite.color_ur = 0xFFFF0000;
@@ -241,6 +253,9 @@ private:
         string fps_str = "ФПС: "s + to_string(time().fps());
         sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(400, 300), 0xFF00FF00, radians(rotation));
         sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(0, 0), 0xFF00FF00);
+
+        sprite_batch->shape_color(0x90909090);
+        sprite_batch->fill_line({100.f, 100.f}, sprite_batch->from_os(mouse_pos_), 12.0f);
 
         sprite_batch->flush();
 
@@ -276,6 +291,10 @@ private:
                     config::window_maximized = false;
                 }
             }
+            break;
+
+        case SDL_MOUSEMOTION:
+            SDL_GetMouseState(&mouse_pos_.x, &mouse_pos_.y);
             break;
         }
     }

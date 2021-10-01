@@ -1,4 +1,4 @@
-export module sprite_font;
+export module dviglo.sprite_batch:sprite_font;
 
 // Модули движка
 export import dviglo.texture; // DvTexture
@@ -44,7 +44,7 @@ export class DvSpriteFont
 private:
     string face_; // Название исходного шрифта (из которого был сгенерирован растровый шрифт)
     i32 size_ = 0; // Размер исходного шрифта
-    i32 line_height_ = 0; // Высота растрового шрифта
+    i32 line_height_ = 0; // Высота шрифта
     vector<DvTexture> textures_; // Текстурные атласы с символами
     unordered_map<u32, Glyph> glyphs_; // кодовая позиция -> изображение
 
@@ -57,6 +57,11 @@ public:
     inline const Glyph& glyph(u32 code_point)
     {
         return glyphs_[code_point];
+    }
+
+    inline const i32 line_height()
+    {
+        return line_height_;
     }
 
     DvSpriteFont(const string& file_path)
@@ -118,9 +123,9 @@ public:
             glyph.y = (i16)char_node.attribute("y").as_uint();
             glyph.width = (i16)char_node.attribute("width").as_uint();
             glyph.height = (i16)char_node.attribute("height").as_uint();
-            glyph.offset_x = (i16)char_node.attribute("xoffset").as_uint();
-            glyph.offset_y = (i16)char_node.attribute("yoffset").as_uint();
-            glyph.advance_x = (i16)char_node.attribute("xadvance").as_uint();
+            glyph.offset_x = (i16)char_node.attribute("xoffset").as_int();
+            glyph.offset_y = (i16)char_node.attribute("yoffset").as_int();
+            glyph.advance_x = (i16)char_node.attribute("xadvance").as_uint(); // Может ли быть < 0?
             glyph.page = (i16)char_node.attribute("page").as_uint();
             glyphs_[id] = glyph;
         }

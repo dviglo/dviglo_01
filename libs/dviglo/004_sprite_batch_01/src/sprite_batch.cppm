@@ -1,10 +1,12 @@
-export module sprite_batch;
+export module dviglo.sprite_batch;
 
 // Модули библиотеки
-export import sprite_font; // DvSpriteFont
+import :sprite_font; // DvSpriteFont
 
 // Модули движка
+export import dviglo.texture; // DvTexture
 import dviglo.base; // u32
+import dviglo.math; // dv_almost_equal
 import dviglo.shader_program; // DvShaderProgram
 import dviglo.std_string_utils; // next_code_point()
 
@@ -82,7 +84,7 @@ public:
     }
 
     // Указывает цвет для следующих треугольников (0xAABBGGRR)
-    void shape_color(u32 color)
+    inline void shape_color(u32 color)
     {
         triangle.v0.color = color;
         triangle.v1.color = color;
@@ -99,7 +101,7 @@ private:
     // Даёт ли это прирост производительности - не тестировалось
     struct Sprite
     {
-        // Позиция верхнего левого угла спрайта
+        // Позиция спрайта (если origin нулевой, то это позиция верхнего левого угла спрайта)
         vec2 position;
 
         // Ширина и высота спрайта
@@ -123,10 +125,10 @@ private:
         // Размер участка текстуры
         vec2 uv_size;
 
-        // Поворот спрайта в радианах против часовой стрелки
+        // Поворот спрайта в радианах по часовой стрелке
         float rotation;
 
-        // Центр вращения спрайта
+        // Начало локальных координат (ноль - это верхний левый угол спрайта)
         vec2 origin;
     };
 
@@ -159,7 +161,8 @@ public:
         return texture_;
     }
 
-    // Устанавливает текущую текстуру. Если ссылка отличается от прежнего значения и происходит накопление спрайтов, то вызывается flush()
+    // Устанавливает текущую текстуру.
+    // Если ссылка отличается от прежнего значения и происходит накопление спрайтов, то вызывается flush()
     inline void texture(DvTexture* value)
     {
         if (texture_ != value && num_sprites_)
@@ -187,7 +190,7 @@ public:
     }
 
     // Указывает цвет для следующих спрайтов (0xAABBGGRR)
-    void sprite_color(u32 color)
+    inline void sprite_color(u32 color)
     {
         sprite.color_ul = color;
         sprite.color_dl = color;
@@ -200,6 +203,19 @@ public:
 private:
 
     bool alpha_blending_ = false;
+
+public:
+
+    // Заглушка для виртуальных координат
+    vec2 from_os(const ivec2& pos)
+    {
+        return vec2(pos.x, pos.y);
+    }
+
+    ivec2 to_os(const vec2& pos)
+    {
+        return ivec2(pos.x, pos.y);
+    }
 
 public:
 
@@ -229,11 +245,11 @@ public:
         glEnableVertexAttribArray(1);
         offset += sizeof(u32);
 
+        // Отвязываем настроенный VAO, чтобы не испортить
+        glBindVertexArray(0);
+
         // По умолчанию белый цвет
         shape_color(0xFFFFFFFF);
-
-        // Отвязываем VAO, чтобы не испортить
-        glBindVertexArray(0);
 
         // ================================= Спрайты =================================
 
@@ -262,7 +278,7 @@ public:
         glEnableVertexAttribArray(2);
         offset += sizeof(u32);
 
-        // sprite.color_ur
+        // sprite.color_dl
         glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Sprite), (const void*)offset);
         glEnableVertexAttribArray(3);
         offset += sizeof(u32);
@@ -272,7 +288,7 @@ public:
         glEnableVertexAttribArray(4);
         offset += sizeof(u32);
 
-        // sprite.color_dl
+        // sprite.color_ur
         glVertexAttribPointer(5, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Sprite), (const void*)offset);
         glEnableVertexAttribArray(5);
         offset += sizeof(u32);
@@ -297,11 +313,11 @@ public:
         glEnableVertexAttribArray(9);
         offset += sizeof(vec2);
 
-        // По умолчанию белый цвет
-        sprite_color(0xFFFFFFFF);
-
         // Отвязываем настроенный VAO, чтобы не испортить
         glBindVertexArray(0);
+
+        // По умолчанию белый цвет
+        sprite_color(0xFFFFFFFF);
     }
 
     ~DvSpriteBatch()
@@ -334,14 +350,14 @@ public:
         }
     }
 
-    ivec2 screen_size{ 800, 600 };
+    ivec2 screen_size{800, 600};
 
     void flush()
     {
         if (t_num_vertices_)
         {
             t_shader_program_.use();
-            t_shader_program_.set("u_scale", vec2(2.0f / screen_size.x, -2.0f / screen_size.y));
+            t_shader_program_.set("u_pos_scale", vec2(2.0f / screen_size.x, -2.0f / screen_size.y));
 
             // Копируем накопленную геометрию в память видеокарты
             glBindBuffer(GL_ARRAY_BUFFER, t_vbo_name_);
@@ -361,7 +377,7 @@ public:
             texture_->bind();
 
             s_shader_program_.use();
-            s_shader_program_.set("u_scale", vec2(2.0f / screen_size.x, -2.0f / screen_size.y));
+            s_shader_program_.set("u_pos_scale", vec2(2.0f / screen_size.x, -2.0f / screen_size.y));
 
             // Копируем накопленную геометрию в память видеокарты
             glBindBuffer(GL_ARRAY_BUFFER, s_vbo_name_);
@@ -399,13 +415,55 @@ public:
             sprite.rotation = rotation;
             sprite.size.x = glyph.width;
             sprite.size.y = glyph.height;
-            sprite.uv_position.x = glyph.x * 1.0f / 1024.f;
-            sprite.uv_position.y = glyph.y * 1.0f / 1024.f;
-            sprite.uv_size.x = glyph.width * 1.0f / 1024.f;
-            sprite.uv_size.y = glyph.height * 1.0f / 1024.f;
+            sprite.uv_position.x = glyph.x * 1.0f / texture_->width();
+            sprite.uv_position.y = glyph.y * 1.0f / texture_->height();
+            sprite.uv_size.x = glyph.width * 1.0f / texture_->width();
+            sprite.uv_size.y = glyph.height * 1.0f / texture_->height();
             sprite.origin = vec2(-advance_x_sum - glyph.offset_x, -glyph.offset_y); // Модифицируем origin, а не позицию, чтобы было правильное вращение
             add_sprite();
             advance_x_sum += glyph.advance_x;
         }
+    }
+
+// ============================ Используем пакетный рендерер треугольников ============================
+
+    // Закрашенный треугольник. Вершины против часовой стрелки
+    inline void fill_triangle(const vec2& v0, const vec2& v1, const vec2& v2)
+    {
+        triangle.v0.position = v0;
+        triangle.v1.position = v1;
+        triangle.v2.position = v2;
+        add_triangle();
+    }
+
+    // Закрашенный прямоугольник
+    inline void fill_aabb(const vec2& min, const vec2& max)
+    {
+        vec2 right_top{max.x, min.y}; // Правый верхний угол
+        vec2 left_bot{min.x, max.y}; // Левый нижний
+        fill_triangle(min, left_bot, max);
+        fill_triangle(min, max, right_top);
+    }
+
+    // Закрашенная линия.
+    // Объяснение работы функции смотрите в файле docs/fill_line.md
+    void fill_line(const vec2& start, const vec2& end, float width)
+    {
+        float len = length(end - start);
+        if (dv_almost_equal(len, 0.0f))
+            return;
+
+        float cosine = (end.x - start.x) / len;
+        float sine = (end.y - start.y) / len;
+        float half_width = width * 0.5f;
+        vec2 v0_offset = vec2(half_width * sine, -half_width * cosine);
+
+        vec2 v0 = start + v0_offset;
+        vec2 v3 = end + v0_offset;
+        vec2 v1 = start - v0_offset;
+        vec2 v2 = end - v0_offset;
+
+        fill_triangle(v0, v1, v2);
+        fill_triangle(v0, v2, v3);
     }
 };

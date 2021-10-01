@@ -15,10 +15,23 @@ private:
     // Идентификатор объекта OpenGL
     GLuint gpu_object_name_;
 
+    GLsizei width_;
+    GLsizei height_;
+
 public:
     inline GLuint gpu_object_name() const
     {
         return gpu_object_name_;
+    }
+
+    inline GLsizei width() const
+    {
+        return width_;
+    }
+
+    inline GLsizei height() const
+    {
+        return height_;
     }
 
     DvTexture()
@@ -42,6 +55,9 @@ public:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, format, GL_UNSIGNED_BYTE, image.data());
         glGenerateMipmap(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        width_ = image.width();
+        height_ = image.height();
     }
 
     ~DvTexture()
