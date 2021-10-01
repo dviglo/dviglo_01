@@ -398,8 +398,6 @@ public:
     void draw_string(const string& text, DvSpriteFont* font, const vec2& position, u32 color = 0xFFFFFFFF, float rotation = 0.0f/*, float fontSize, const Vector2& position, u32 color = 0xFFFFFFFF,
         float rotation = 0.0f, const Vector2& origin = Vector2::ZERO, const Vector2& scale = Vector2::ONE, FlipMode flipMode = FlipMode::NONE*/)
     {
-        texture(&font->texture(0));
-
         sprite_color(color);
 
         float advance_x_sum = 0.f;
@@ -409,6 +407,8 @@ public:
         {
             u32 code_point = next_code_point(text, offset);
             const Glyph& glyph = font->glyph(code_point);
+
+            texture(&font->texture(glyph.page));
 
             sprite.position.y = position.y/* + glyph.offset_y*/;
             sprite.position.x = position.x/* + glyph.offset_x */;
