@@ -98,12 +98,12 @@ export struct App
             return;
         }
 
-        sprite_font_18 = make_unique<DvSpriteFont>(dv_base_path() + "/60_data/fonts/ubuntu-r_18_simple.fnt");
-        sprite_font_18_shadow = make_unique<DvSpriteFont>(dv_base_path() + "/60_data/fonts/ubuntu-r_18_simple_blurred.fnt");
-        texture_1 = make_unique<DvTexture>(dv_base_path() + "/60_data/1.png");
-        texture_2 = make_unique<DvTexture>(dv_base_path() + "/60_data/2.png");
-        texture_3 = make_unique<DvTexture>(dv_base_path() + "/60_data/3.png");
-        texture_atlas = make_unique<DvTexture>(dv_base_path() + "/60_data/atlas.png");
+        sprite_font_18 = make_unique<DvSpriteFont>(dv_base_path() + "/sbb_data/fonts/ubuntu-r_18_simple.fnt");
+        sprite_font_18_shadow = make_unique<DvSpriteFont>(dv_base_path() + "/sbb_data/fonts/ubuntu-r_18_simple_blurred.fnt");
+        texture_1 = make_unique<DvTexture>(dv_base_path() + "/sbb_data/1.png");
+        texture_2 = make_unique<DvTexture>(dv_base_path() + "/sbb_data/2.png");
+        texture_3 = make_unique<DvTexture>(dv_base_path() + "/sbb_data/3.png");
+        texture_atlas = make_unique<DvTexture>(dv_base_path() + "/sbb_data/atlas.png");
         sprite_batch = make_unique<DvSpriteBatch>();
 
         SDL_Event event;

@@ -1,5 +1,5 @@
 # Название таргета
-set(target_name 60_sprite_batch_benchmark)
+set(target_name sprite_batch_benchmark)
 
 # Создаём список файлов
 file(GLOB_RECURSE source_files *.cpp *.cppm)
@@ -19,7 +19,7 @@ set_property(TARGET ${target_name} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${bin_
 
 # Создаём ссылку на папку с ресурсами (требует админских прав)
 file(MAKE_DIRECTORY ${bin_dir})
-dviglo_create_symlink(${CMAKE_CURRENT_SOURCE_DIR}/60_data ${bin_dir}/60_data)
+dviglo_create_symlink(${CMAKE_CURRENT_SOURCE_DIR}/sbb_data ${bin_dir}/sbb_data)
 
 # Заставляем VS отображать дерево каталогов
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${source_files})
