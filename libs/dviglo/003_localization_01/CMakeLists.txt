@@ -14,4 +14,4 @@ target_link_libraries(${target_name} PRIVATE rapidjson_01 dviglo_std_utils_01)
 # 000_rapidjson_01, 002_std_utils_01
 
 # Заставляем VS отображать дерево каталогов
-source_group(TREE  ${CMAKE_CURRENT_SOURCE_DIR}/src FILES ${source_files})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src FILES ${source_files})

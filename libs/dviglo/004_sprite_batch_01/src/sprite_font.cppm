@@ -1,13 +1,17 @@
 export module dviglo.sprite_batch:sprite_font;
 
 // Модули движка
+export import dviglo.base; // i16, i32
 export import dviglo.texture; // DvTexture
 import <pugixml.hpp>;
-import dviglo.log; // DvLog
+import dviglo.log; // LOG
 import dviglo.path; // dv_path
 
 // Стандартная библиотека
-import <unordered_map>;
+import <limits>; // numeric_limits
+export import <string>;
+export import <unordered_map>;
+export import <vector>;
 
 using namespace pugi;
 using namespace std;
@@ -42,11 +46,11 @@ export struct Glyph
 export class DvSpriteFont
 {
 private:
-    string face_; // Название исходного шрифта (из которого был сгенерирован растровый шрифт)
+    string face_; // Название исходного шрифта (из которого был сгенерирован спрайтовый шрифт)
     i32 size_ = 0; // Размер исходного шрифта
-    i32 line_height_ = 0; // Высота шрифта
+    i32 line_height_ = 0; // Высота шрифта в пикселях
     vector<DvTexture> textures_; // Текстурные атласы с символами
-    unordered_map<u32, Glyph> glyphs_; // кодовая позиция -> изображение
+    unordered_map<u32, Glyph> glyphs_; // Кодовая позиция -> изображение
 
 public:
     inline DvTexture& texture(size_t index)

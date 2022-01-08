@@ -1,5 +1,5 @@
 /*
-    Вспомогательный объект, который выполнит какую-то функцию, когда он выйдет из области видимости.
+    Вспомогательный объект, выполняющий лямбда-функцию при выходе из области видимости.
 
     Пример использования:
     {
@@ -12,13 +12,14 @@
 
 export module dviglo.scope_guard;
 
+// Стандартные библиотеки
 import <concepts>;
 
 using namespace std;
 
-export template<typename F>
-// Убеждаемся, что сигнатура лямбы правильная
-requires invocable<F> && requires(F f) { { f() } -> same_as<void>; }
+export
+template<typename F>
+requires invocable<F> && requires(F f) { { f() } -> same_as<void>; } // Убеждаемся, что сигнатура лямбы правильная
 class DvScopeGuard
 {
 private:

@@ -8,7 +8,7 @@ using namespace glm;
 export class Camera
 {
     vec2 position{0.f, 0.f};
-    float rotation = 0.f; // В радианах против часовой стрелки
+    float rotation = 0.f; // В радианах против/по? часовой стрелки
 };
 
 /*

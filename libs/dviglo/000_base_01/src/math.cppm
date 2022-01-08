@@ -1,4 +1,4 @@
-export module dviglo.math;
+export module dviglo.base.math;
 
 // Стандартная библиотека
 import <limits>;

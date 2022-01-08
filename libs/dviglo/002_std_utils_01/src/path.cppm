@@ -1,5 +1,6 @@
 export module dviglo.path;
 
+// Модули движка
 import dviglo.std_string_utils;
 
 using namespace std;
@@ -23,7 +24,7 @@ inline void to_native(string& path)
 }
 
 // Возвращает подстроку до последнего / (не включительно). Если / в пути нет, тогда возвращает "."
-string get_directory_path(const string& file_path)
+inline string get_directory_path(const string& file_path)
 {
     size_t pos = file_path.find_last_of('/');
 
@@ -34,4 +35,3 @@ string get_directory_path(const string& file_path)
 }
 
 } // export namespace dv_path
-

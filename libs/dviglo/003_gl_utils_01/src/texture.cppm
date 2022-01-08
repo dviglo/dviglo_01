@@ -1,11 +1,11 @@
 export module dviglo.texture;
 
 // Модули движка
+export import dviglo.image; // DvImage
 export import <GL/glew.h>;
-import dviglo.image;
 
 // Стандартная библиотека
-import <string>;
+export import <string>;
 
 using namespace std;
 
@@ -34,15 +34,15 @@ public:
         return height_;
     }
 
-    DvTexture()
+    inline DvTexture()
     {
         gpu_object_name_ = 0;
+        width_ = 0;
+        height_ = 0;
     }
 
-    DvTexture(const string& file_path)
+    DvTexture(const DvImage& image)
     {
-        DvImage image(file_path);
-
         GLenum format;
 
         if (image.num_components() == 3)
@@ -60,7 +60,12 @@ public:
         height_ = image.height();
     }
 
-    ~DvTexture()
+    DvTexture(const string& file_path)
+        : DvTexture(DvImage(file_path))
+    {
+    }
+
+    inline ~DvTexture()
     {
         glDeleteTextures(1, &gpu_object_name_); // Проверка на 0 не нужна
         gpu_object_name_ = 0;
@@ -72,13 +77,15 @@ public:
     DvTexture& operator=(const DvTexture&) = delete;
 
     // Но разрешаем перемещение, чтобы можно было хранить объекты в векторе
-    DvTexture(DvTexture&& other)
+    inline DvTexture(DvTexture&& other) noexcept
     {
         gpu_object_name_ = other.gpu_object_name_;
+        width_ = other.width_;
+        height_ = other.height_;
         other.gpu_object_name_ = 0;
     }
 
-    DvTexture& operator=(DvTexture&& other)
+    inline DvTexture& operator=(DvTexture&& other) noexcept
     {
         if (this != &other)
         {

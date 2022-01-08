@@ -14,4 +14,4 @@ target_link_libraries(${target_name} PUBLIC stb_01 dviglo_log_01)
 # 000_stb_01, 001_log_01
 
 # Заставляем VS отображать дерево каталогов
-source_group(TREE  ${CMAKE_CURRENT_SOURCE_DIR}/src FILES ${source_files})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src FILES ${source_files})

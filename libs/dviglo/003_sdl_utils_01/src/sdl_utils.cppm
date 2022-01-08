@@ -1,13 +1,14 @@
 export module dviglo.sdl_utils;
 
 // Модули движка
-import <SDL.h>; // SDL_GetPrefPath(), SDL_GetBasePath()
-import dviglo.log; // DvLog
+import <SDL.h>; // SDL_GetPrefPath, SDL_GetBasePath
+import dviglo.log; // LOG
 import dviglo.path; // dv_path
 
 // Стандартная библиотека
-import <cassert>; // assert()
-import <cstdlib>; // exit()
+export import <string>;
+import <cassert>; // assert
+import <cstdlib>; // exit
 import <iostream>; // cerr
 
 using namespace std;
@@ -61,3 +62,4 @@ export string dv_base_path()
         return ret;
     }
 }
+

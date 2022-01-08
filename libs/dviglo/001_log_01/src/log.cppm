@@ -18,6 +18,9 @@ using namespace std;
 
 export class DvLog
 {
+private:
+    ofstream stream_;
+
 public:
     enum class MessageType : i32
     {
@@ -28,10 +31,12 @@ public:
         none       // 4
     };
 
-private:
-    ofstream stream_;
+    // Уровень сообщения, который будет выводиться в лог
+    MessageType level = MessageType::debug;
 
-public:
+    // Уровень сообщения, который будет выводится в консоль
+    MessageType echo_level = MessageType::error;
+
     inline void open(const string& path)
     {
         stream_.open(path);
@@ -49,14 +54,6 @@ public:
         stream_.close();
     }
 
-public:
-    // Уровень сообщения, который будет выводиться в лог
-    MessageType level = MessageType::debug;
-
-    // Уровень сообщения, который будет выводится в консоль
-    MessageType echo_level = MessageType::error;
-
-public:
     void write(MessageType message_type, const string& message);
 
     inline void write_debug(const string& message)
@@ -79,7 +76,6 @@ public:
         write(MessageType::error, message);
     }
 
-public:
     DvLog() = default;
     
     ~DvLog()
@@ -92,9 +88,8 @@ public:
         }
     }
 
-public:
     // Глобальный лог для удобства. Также можно создавать специализированные логи через конструктор
-    static DvLog& get()
+    static inline DvLog& get()
     {
         // В C++11 синглтон Майерса является потокобезопасным: https://stackoverflow.com/a/1661564
         static DvLog instance;

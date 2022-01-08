@@ -7,7 +7,7 @@ using namespace std;
 export
 {
 
-inline const string APP_NAME = "Game";
-inline const string ORG_NAME = "Dviglo";
+inline const string APP_NAME{"Game"s};
+inline const string ORG_NAME{"Dviglo"s};
 
 } // export

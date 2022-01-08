@@ -1,7 +1,7 @@
 export module dviglo.file;
 
 // Модули движка
-import dviglo.log;
+import dviglo.log; // LOG
 
 using namespace std;
 
@@ -40,4 +40,4 @@ string read_all_text(const string& path)
     return ret;
 }
 
-} // namespace dv_file
+} // export namespace dv_file

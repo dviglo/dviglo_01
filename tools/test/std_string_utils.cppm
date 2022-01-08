@@ -2,6 +2,7 @@ export module test.std_string_utils;
 
 import "force_assert.h";
 
+// Модули движка
 import dviglo.std_string_utils;
 
 using namespace std;

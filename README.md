@@ -1,8 +1,3 @@
-# Работа над данной версией приостановлена
-
-На данный момент IntelliSense Студии не справляется с модулями C++20. А без него работать решительно невозможно.
-Пока что будет развиваться версия движка без модулей C++20.
-
 # Dviglo
 
 Игровой движок.
@@ -96,7 +91,7 @@ cd /D "%~dp0"
 :: Указываем путь к cmake.exe
 set "PATH=c:\Programs\CMake\bin"
 
-:: Создаём проекты для Visual Studio 2020 в папке build_vs17, используя конфиг CMakeLists.txt из папки repo
+:: Создаём проекты для Visual Studio 2022 в папке build_vs17, используя конфиг CMakeLists.txt из папки repo
 cmake repo -B build_vs17 -G "Visual Studio 17" -D dviglo_win_console=1 -D dviglo_build_all_libs=1
 
 pause

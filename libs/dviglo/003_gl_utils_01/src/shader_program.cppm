@@ -3,12 +3,12 @@ export module dviglo.shader_program;
 // Модули движка
 export import <GL/glew.h>;
 export import <glm/mat2x2.hpp>;
-import dviglo.file;
-import dviglo.log;
-import dviglo.std_string_utils;
+import dviglo.file; // dv_file
+import dviglo.log; // LOG
+import dviglo.std_string_utils; // trim_end
 
 // Стандартная библиотека
-import <string>;
+export import <string>;
 
 using namespace std;
 
@@ -45,15 +45,15 @@ private:
     // Идентификатор объекта OpenGL
     GLuint gpu_object_name_;
 
+    inline DvShaderProgram()
+    {
+        gpu_object_name_ = 0;
+    }
+
 public:
     inline GLuint gpu_object_name() const
     {
         return gpu_object_name_;
-    }
-
-    DvShaderProgram()
-    {
-        gpu_object_name_ = 0;
     }
 
     // Геометрический шейдер может отсутствовать
@@ -98,7 +98,7 @@ public:
             // Печатаем ошибку в лог
             GLint buffer_size; // длина строки + нуль-терминатор
             glGetProgramiv(gpu_object_name_, GL_INFO_LOG_LENGTH, &buffer_size);
-            string msg(buffer_size - 1, '\0'); // buffer_size - 1 так как std::string сам выделяет место для нуль-терминатора
+            string msg(buffer_size - 1, '\0'); // buffer_size - 1 так как string сам выделяет место для нуль-терминатора
             glGetProgramInfoLog(gpu_object_name_, buffer_size, nullptr, msg.data());
             trim_end(msg, "\n");
             LOG().write_error(msg);
@@ -113,7 +113,7 @@ public:
         glDeleteShader(geometry_shader); // Проверка на 0 не нужна
     }
 
-    ~DvShaderProgram()
+    inline ~DvShaderProgram()
     {
         glDeleteProgram(gpu_object_name_); // Проверка на 0 не нужна
         gpu_object_name_ = 0;
@@ -125,13 +125,13 @@ public:
     DvShaderProgram& operator=(const DvShaderProgram&) = delete;
 
     // Но разрешаем перемещение, чтобы можно было хранить объекты в векторе
-    DvShaderProgram(DvShaderProgram&& other)
+    inline DvShaderProgram(DvShaderProgram&& other) noexcept
     {
         gpu_object_name_ = other.gpu_object_name_;
         other.gpu_object_name_ = 0;
     }
 
-    DvShaderProgram& operator=(DvShaderProgram&& other)
+    inline DvShaderProgram& operator=(DvShaderProgram&& other) noexcept
     {
         if (this != &other)
         {

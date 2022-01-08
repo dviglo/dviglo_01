@@ -1,13 +1,11 @@
 // Пример показывает окно 3 секунды
 // https://wiki.libsdl.org/SDL_CreateWindow
 
-// Ошибка линковки, если импортировать, поэтому инклудим
-#include <SDL.h>
-
 // Модули движка
-import dviglo.log; // LOG()
+import dviglo.log; // LOG
 import dviglo.scope_guard; // DvScopeGuard
-import dviglo.sdl_utils; // dv_pref_path()
+import dviglo.sdl_utils; // dv_pref_path
+#include <SDL.h>
 
 using namespace std;
 

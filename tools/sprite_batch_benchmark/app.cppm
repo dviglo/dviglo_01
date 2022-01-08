@@ -1,21 +1,18 @@
 export module app;
 
 // Модули движка
-import <glm/trigonometric.hpp>; // radians()
 import <glm/vec2.hpp>;
 import <SDL.h>;
-import dviglo.sdl_utils; // dv_base_path()
 import dviglo.scope_guard; // DvScopeGuard
+import dviglo.sdl_utils; // dv_base_path
 import dviglo.sprite_batch; // DvSpriteBatch, DvSpriteFont
 import dviglo.time; // DvTime
 
 // Стандартная библиотека
-import <string>;
-import <vector>;
-import <memory>;
+import <memory>; // unique_ptr
 
-using namespace std;
 using namespace glm;
+using namespace std;
 
 static const ivec2 WINDOW_SIZE{800, 600};
 
@@ -37,7 +34,7 @@ export struct App
         use_atlas,
         not_use_atlas
     };
-        
+
     Mode mode = Mode::use_atlas;
     bool use_alpha = true;
 
@@ -142,7 +139,7 @@ export struct App
 
         sprite_batch->sprite.rotation = 0;
         sprite_batch->sprite.origin = vec2(0, 0);
-        sprite_batch->sprite.size = {128, 128};
+        sprite_batch->sprite.size = vec2(128, 128);
 
         const i32 NUM_ITERATIONS = 2000;
         const ivec2 MAX_SPRITE_POS{WINDOW_SIZE.x - 128, WINDOW_SIZE.y - 128};

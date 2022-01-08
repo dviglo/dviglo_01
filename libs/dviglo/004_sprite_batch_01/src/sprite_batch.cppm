@@ -1,22 +1,20 @@
 export module dviglo.sprite_batch;
 
 // Модули библиотеки
-import :sprite_font; // DvSpriteFont
+export import :sprite_font; // DvSpriteFont
 
 // Модули движка
-export import dviglo.texture; // DvTexture
-import dviglo.base; // u32
-import dviglo.math; // dv_almost_equal
-import dviglo.shader_program; // DvShaderProgram
-import dviglo.std_string_utils; // next_code_point()
+export import dviglo.shader_program; // DvShaderProgram
+import dviglo.std_string_utils; // next_code_point
+import dviglo.base.math; // dv_almost_equal
 
 using namespace glm;
 using namespace std;
 
+#include "shaders.inl"
+
 // Так как участки памяти копируются напрямую, то убеждаемся, что структура имеет ожидаемый размер
 static_assert(sizeof(vec2) == 2 * 4);
-
-#include "shaders.inl"
 
 export class DvSpriteBatch
 {
@@ -48,7 +46,7 @@ private:
     u32 t_num_vertices_ = 0;
 
     // Шейдерная программа для рендеринга треугольников
-    DvShaderProgram t_shader_program_{TRIANGLE_VERTEX_SHADER_SRC, TRIANGLE_FRAGMENT_SHADER_SRC};
+    DvShaderProgram t_shader_program_;
 
     // Vertex Buffer Object - объект на GPU, хранящий вершины треугольников
     GLuint t_vbo_name_;
@@ -142,7 +140,7 @@ private:
     u32 num_sprites_ = 0;
 
     // Шейдерная программа для рендеринга спрайтов
-    DvShaderProgram s_shader_program_{SPRITE_VERTEX_SHADER_SRC, SPRITE_FRAGMENT_SHADER_SRC, SPRITE_GEOMETRY_SHADER_SRC};
+    DvShaderProgram s_shader_program_;
 
     // Vertex Buffer Object - объект на GPU, хранящий спрайты
     GLuint s_vbo_name_;
@@ -220,6 +218,8 @@ public:
 public:
 
     DvSpriteBatch()
+        : t_shader_program_(TRIANGLE_VERTEX_SHADER_SRC, TRIANGLE_FRAGMENT_SHADER_SRC)
+        , s_shader_program_(SPRITE_VERTEX_SHADER_SRC, SPRITE_FRAGMENT_SHADER_SRC, SPRITE_GEOMETRY_SHADER_SRC)
     {
         // ================================= Треугольники =================================
 
@@ -320,7 +320,7 @@ public:
         sprite_color(0xFFFFFFFF);
     }
 
-    ~DvSpriteBatch()
+    inline ~DvSpriteBatch()
     {
         glDeleteBuffers(1, &t_vbo_name_);
         glDeleteVertexArrays(1, &t_vao_name_);

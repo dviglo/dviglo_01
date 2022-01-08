@@ -5,19 +5,21 @@ import consts;
 import config;
 
 // Модули движка
-import <glm/trigonometric.hpp>; // radians()
-import <glm/vec2.hpp>;
-import <SDL.h>;
-import <SDL_mixer.h>;
+import dviglo.base; // i32
+import <SDL.h>; // SDL_Window
+import dviglo.time; // DvTime
+import <glm/vec2.hpp>; // ivec2
+import <SDL_mixer.h>; // Mix_Chunk
 import dviglo.sprite_batch; // DvSpriteBatch, DvSpriteFont
 import dviglo.localization; // DvLocalization
+import <glm/trigonometric.hpp>; // radians
 import dviglo.scope_guard; // DvScopeGuard
-import dviglo.sdl_utils; // dv_base_path(), dv_pref_path()
-import dviglo.time; // DvTime
+import dviglo.sdl_utils; // dv_base_path, dv_pref_path
 
 // Стандартная библиотека
 import <string>;
 import <vector>;
+import <memory>; // unique_ptr
 
 using namespace std;
 using namespace glm;
@@ -28,7 +30,7 @@ using namespace glm;
 export class App
 {
 public:
-    static App& get()
+    static inline App& get()
     {
         // В C++11 синглтон Майерса является потокобезопасным: https://stackoverflow.com/a/1661564
         static App instance;
@@ -56,15 +58,6 @@ private:
     ivec2 mouse_pos_;
 
     Mix_Chunk* sound_;
-
-    // Конструктор спрятан, экземляр создаётся в get()
-    App()
-    {
-    }
-
-    ~App()
-    {
-    }
 
     // Вызывается в начале run()
     void begin_run()
@@ -246,7 +239,7 @@ private:
         sprite_batch->add_triangle();
 
         sprite_batch->shape_color(0xFFFFFF90);
-        sprite_batch->fill_aabb({10.0f, 300.f}, {310, 550.f});
+        sprite_batch->fill_aabb({ 10.0f, 300.f }, { 310, 550.f });
 
         sprite_batch->texture(texture.get());
         sprite_batch->sprite.color_ul = 0xFF00FF00;
@@ -258,12 +251,12 @@ private:
         sprite_batch->sprite.rotation = radians(rotation);
         sprite_batch->sprite.origin = vec2(0, 0);
         sprite_batch->sprite.position = vec2(400, 300);
-        sprite_batch->sprite.size = { 400, 300 };
+        sprite_batch->sprite.size = {400, 300};
         sprite_batch->add_sprite();
 
         string fps_str = "ФПС: "s + to_string(time().fps());
-        sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(400, 300), 0xFF00FF00, radians(rotation));
-        sprite_batch->draw_string(fps_str, sprite_font.get(), vec2(0, 0), 0xFF00FF00);
+        sprite_batch->draw_string(fps_str, sprite_font.get(), {400, 300}, 0xFF00FF00, radians(rotation));
+        sprite_batch->draw_string(fps_str, sprite_font.get(), {0, 0}, 0xFF00FF00);
 
         sprite_batch->shape_color(0x90909090);
         sprite_batch->fill_line({100.f, 100.f}, sprite_batch->from_os(mouse_pos_), 12.0f);
@@ -282,27 +275,27 @@ private:
             break;
 
         case SDL_WINDOWEVENT:
+        {
+            if (e->window.event == SDL_WINDOWEVENT_RESIZED)
             {
-                if (e->window.event == SDL_WINDOWEVENT_RESIZED)
+                // Не запоминаем размеры окна, если оно развернуто на весь экран.
+                u32 flags = SDL_GetWindowFlags(window_);
+                if (!(flags & SDL_WINDOW_MAXIMIZED))
                 {
-                    // Не запоминаем размеры окна, если оно развернуто на весь экран.
-                    u32 flags = SDL_GetWindowFlags(window_);
-                    if (!(flags & SDL_WINDOW_MAXIMIZED))
-                    {
-                        config::window_width = e->window.data1;
-                        config::window_height = e->window.data2;
-                    }
-                }
-                else if (e->window.event == SDL_WINDOWEVENT_MAXIMIZED)
-                {
-                    config::window_maximized = true;
-                }
-                else if (e->window.event == SDL_WINDOWEVENT_RESTORED)
-                {
-                    config::window_maximized = false;
+                    config::window_width = e->window.data1;
+                    config::window_height = e->window.data2;
                 }
             }
-            break;
+            else if (e->window.event == SDL_WINDOWEVENT_MAXIMIZED)
+            {
+                config::window_maximized = true;
+            }
+            else if (e->window.event == SDL_WINDOWEVENT_RESTORED)
+            {
+                config::window_maximized = false;
+            }
+        }
+        break;
 
         case SDL_MOUSEMOTION:
             SDL_GetMouseState(&mouse_pos_.x, &mouse_pos_.y);
@@ -351,7 +344,7 @@ public:
     }
 
     // Запросить завершение программы
-    void exit(i32 exit_code = 0)
+    inline void exit(i32 exit_code = 0)
     {
         exit_code_ = exit_code;
         exiting_ = true;
@@ -365,13 +358,6 @@ public:
     // Запуск приложения
     void run(i32 argc, char* argv[])
     {
-#ifndef NDEBUG
-        // Убеждаемся, что функция run() не была вызвана повторно
-        static bool called = false;
-        assert(!called);
-        called = true;
-#endif
-
         // Копируем аргументы в вектор строк
         args_.reserve(argc);
         for (i32 i = 0; i < argc; ++i)
