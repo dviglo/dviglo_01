@@ -6,7 +6,7 @@ module;
 export module dviglo.log;
 
 // Модули движка
-export import dviglo.base; // i32
+export import dviglo.primitive_types; // i32
 
 // Стандартная библиотека
 import <cassert>; // assert

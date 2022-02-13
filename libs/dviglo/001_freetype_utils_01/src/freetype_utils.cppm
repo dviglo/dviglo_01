@@ -7,7 +7,7 @@ module;
 export module dviglo.freetype_utils;
 
 // Модули движка
-import dviglo.base; // i32
+import dviglo.primitive_types; // i32
 
 // Преобразует число в формате 26.6 в обычный i32 с округлением к ближайшему целому
 export inline i32 dv_26dot6_to_i32(FT_Pos value)

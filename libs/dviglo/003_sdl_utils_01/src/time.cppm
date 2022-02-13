@@ -1,7 +1,7 @@
 export module dviglo.time;
 
 // Модули движка
-export import dviglo.base; // i32, u32
+export import dviglo.primitive_types; // i32, u32
 import <SDL.h>;
 
 // Промежуток времени с прошлого кадра

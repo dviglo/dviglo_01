@@ -14,7 +14,7 @@ export module config;
 import consts;
 
 // Модули движка
-export import dviglo.base; // i32
+export import dviglo.primitive_types; // i32
 import dviglo.file; // dv_file
 import dviglo.log; // LOG
 import dviglo.sdl_utils; // dv_pref_path

@@ -6,8 +6,8 @@ module;
 export module dviglo.localization;
 
 // Модули движка
-export import dviglo.base; // i32
 export import dviglo.log; // DvLog
+export import dviglo.primitive_types; // i32
 import <rapidjson/document.h>;
 import <rapidjson/error/en.h>;
 import dviglo.file; // dv_file

@@ -24,4 +24,5 @@ include(${CMAKE_SOURCE_DIR}/cmake/dviglo_utils.cmake)
 
 add_subdirectory(libs)
 add_subdirectory(samples)
+add_subdirectory(tutorials)
 add_subdirectory(tools)

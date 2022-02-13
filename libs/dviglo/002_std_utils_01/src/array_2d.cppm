@@ -1,13 +1,13 @@
 /*
-    Операции с выделенным куском памяти как с 2D - массивом
+    РћРїРµСЂР°С†РёРё СЃ РІС‹РґРµР»РµРЅРЅС‹Рј РєСѓСЃРєРѕРј РїР°РјСЏС‚Рё РєР°Рє СЃ 2D - РјР°СЃСЃРёРІРѕРј
 */
 
 export module dviglo.array_2d;
 
-// Модули движка
-import dviglo.base; // i32
+// РњРѕРґСѓР»Рё РґРІРёР¶РєР°
+import dviglo.primitive_types; // i32
 
-// Стандартная библиотека
+// РЎС‚Р°РЅРґР°СЂС‚РЅР°СЏ Р±РёР±Р»РёРѕС‚РµРєР°
 import <algorithm>; // copy
 import <cassert>; // assert
 
@@ -59,7 +59,7 @@ public:
         clean_fields();
     }
 
-    // Конструктор копирования
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ
     // b(a);
     inline DvArray2D(const DvArray2D& other)
     {
@@ -69,7 +69,7 @@ public:
         copy(other.data_, other.data_ + width_ * height_, data_);
     }
 
-    // Оператор копирования
+    // РћРїРµСЂР°С‚РѕСЂ РєРѕРїРёСЂРѕРІР°РЅРёСЏ
     // b = a;
     inline DvArray2D& operator=(const DvArray2D& other)
     {
@@ -85,7 +85,7 @@ public:
         return *this;
     }
 
-    // Конструктор перемещения
+    // РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРµСЂРµРјРµС‰РµРЅРёСЏ
     // b(move(a));
     inline DvArray2D(DvArray2D&& other) noexcept
     {
@@ -95,7 +95,7 @@ public:
         other.clean_fields();
     }
 
-    // Оператор перемещения
+    // РћРїРµСЂР°С‚РѕСЂ РїРµСЂРµРјРµС‰РµРЅРёСЏ
     // b = move(a);
     inline DvArray2D& operator=(DvArray2D&& other) noexcept
     {

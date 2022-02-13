@@ -5,7 +5,7 @@ import consts;
 import config;
 
 // Модули движка
-import dviglo.base; // i32
+import dviglo.primitive_types; // i32
 import <SDL.h>; // SDL_Window
 import dviglo.time; // DvTime
 import <glm/vec2.hpp>; // ivec2

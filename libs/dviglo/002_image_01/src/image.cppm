@@ -9,7 +9,7 @@ module;
 export module dviglo.image;
 
 // Модули движка
-import dviglo.base; // i32, u8
+import dviglo.primitive_types; // i32, u8
 
 // Стандартная библиотека
 import <string>;

@@ -1,7 +1,7 @@
 export module dviglo.sprite_batch:sprite_font;
 
 // Модули движка
-export import dviglo.base; // i16, i32
+export import dviglo.primitive_types; // i16, i32
 export import dviglo.texture; // DvTexture
 import <pugixml.hpp>;
 import dviglo.log; // LOG

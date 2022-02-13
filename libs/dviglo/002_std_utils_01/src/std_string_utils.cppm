@@ -1,7 +1,7 @@
 export module dviglo.std_string_utils;
 
 // Модули движка
-import dviglo.base; // u8
+import dviglo.primitive_types; // u8
 
 // Стандартная библиотека
 export import <string>;
